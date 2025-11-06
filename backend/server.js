@@ -3,6 +3,8 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const fs = require('fs');
 const path = require('path');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
 
 const candidates = [
   path.resolve(__dirname, '.env'),
@@ -22,6 +24,12 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+
+// Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'Restaurant Reservation API Docs'
+}));
 
 // Routes
 const authRoutes = require('./routes/auth.route');
@@ -375,4 +383,5 @@ app.get('/api/time-slots', async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
+  console.log(`📚 Documentation API disponible sur http://localhost:${PORT}/api-docs`);
 });
