@@ -10,7 +10,7 @@ exports.createReservation = async (req, res) => {
   try {
     const connection = await getConnection();
     
-    let existingQuery = 'SELECT SUM(guests) as total_guests FROM reservations WHERE reservation_date = ? AND reservation_time = ? AND status != "cancelled"';
+    let existingQuery = 'SELECT SUM(guests) as total_guests FROM reservations WHERE reservation_date = ? AND reservation_time = ? AND status NOT IN ("cancelled", "rejected")';
     const existingParams = [reservation_date, reservation_time];
     if (place_id) {
       existingQuery += ' AND place_id = ?';
@@ -123,18 +123,46 @@ exports.cancelReservation = async (req, res) => {
 exports.patchStatus = async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
+  
+  // Vérifier que l'utilisateur est hôte ou admin
   if (req.userRole !== 'host' && req.userRole !== 'admin') {
     return res.status(403).json({ error: 'Accès interdit' });
   }
-  if (!['confirmed', 'cancelled'].includes(status)) {
-    return res.status(400).json({ error: 'Statut invalide' });
+  
+  // Valider le statut (inclut maintenant 'rejected')
+  if (!['confirmed', 'rejected', 'cancelled'].includes(status)) {
+    return res.status(400).json({ error: 'Statut invalide. Valeurs acceptées: confirmed, rejected, cancelled' });
   }
 
   try {
     const connection = await getConnection();
+    
+    // Vérifier que la réservation existe
+    const [reservation] = await connection.execute(
+      'SELECT id, status, user_id FROM reservations WHERE id = ?',
+      [id]
+    );
+    
+    if (reservation.length === 0) {
+      await connection.end();
+      return res.status(404).json({ error: 'Réservation non trouvée' });
+    }
+    
+    const oldStatus = reservation[0].status;
+    
+    // Mettre à jour le statut
     await connection.execute('UPDATE reservations SET status = ? WHERE id = ?', [status, id]);
     await connection.end();
-    res.json({ message: 'Statut mis à jour' });
+    
+    // TODO: Envoyer une notification au client (Firebase/email)
+    // notificationService.sendStatusUpdate(reservation[0].user_id, id, oldStatus, status);
+    
+    res.json({ 
+      message: 'Statut mis à jour avec succès', 
+      reservationId: id,
+      oldStatus,
+      newStatus: status 
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Erreur serveur' });

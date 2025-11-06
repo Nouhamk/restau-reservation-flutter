@@ -26,7 +26,7 @@ exports.checkAvailability = async (req, res) => {
       return res.status(400).json({ error: 'Créneau invalide' });
     }
 
-    let reservationsQuery = 'SELECT SUM(guests) as total_guests FROM reservations WHERE reservation_date = ? AND reservation_time = ? AND status != "cancelled"';
+    let reservationsQuery = 'SELECT SUM(guests) as total_guests FROM reservations WHERE reservation_date = ? AND reservation_time = ? AND status NOT IN ("cancelled", "rejected")';
     const reservationsParams = [date, time];
     if (place_id) {
       reservationsQuery += ' AND place_id = ?';
