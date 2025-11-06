@@ -6,19 +6,8 @@ on:
       - main
 
 jobs:
-  notify_webhook:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Send Webhook Notification
-        env:
-          WEBHOOK_URL: "https://coolify.67gigs.codes/webhooks/source/github/events/manual"
-        run: |
-          payload=$(jq -n \
-            --arg repo "${{ github.repository }}" \
-            --arg branch "${{ github.ref_name }}" \
-            --arg commit "${{ github.sha }}" \
-            --arg actor "${{ github.actor }}" \
-            --arg msg "${{ github.event.head_commit.message }}" \
-            '{repository: $repo, branch: $branch, commit: $commit, actor: $actor, message: $msg}')
-          
-          curl -X POST -H "Content-Type: application/json" -d "$payload" "$WEBHOOK_URL"
+      - name: Déclencher le déploiment coolify
+        run: curl --location 'https://coolify.67gigs.codes/api/v1/deploy?uuid=mskogwwcs00ogcwsc488kgow&force=false'
