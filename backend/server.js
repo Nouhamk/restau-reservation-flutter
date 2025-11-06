@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger');
+const { devLogger, requestLogger, responseLogger, errorLogger } = require('./middlewares/logger');
 
 const candidates = [
   path.resolve(__dirname, '.env'),
@@ -21,6 +22,18 @@ if (envPath) {
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Logging middleware - BEFORE other middleware
+console.log('🚀 Starting Restaurant Reservation API Server...');
+console.log('📝 Environment:', process.env.NODE_ENV || 'development');
+console.log('🔌 Port:', PORT);
+
+// Morgan HTTP logger
+app.use(devLogger);
+
+// Custom request/response loggers
+app.use(requestLogger);
+app.use(responseLogger);
 
 app.use(cors());
 app.use(express.json());
@@ -381,7 +394,32 @@ app.get('/api/time-slots', async (req, res) => {
   }
 });
 
+// Error logging middleware - MUST be after all routes
+app.use(errorLogger);
+
+// 404 handler
+app.use((req, res) => {
+  console.log('⚠️  404 Not Found:', {
+    method: req.method,
+    url: req.originalUrl,
+    ip: req.ip
+  });
+  res.status(404).json({ error: 'Route non trouvée' });
+});
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error('💥 Unhandled Error:', {
+    message: err.message,
+    stack: err.stack,
+    url: req.originalUrl
+  });
+  res.status(500).json({ error: 'Erreur serveur interne' });
+});
+
 app.listen(PORT, () => {
-  console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
-  console.log(`📚 Documentation API disponible sur http://localhost:${PORT}/api-docs`);
+  console.log('\n✅ Serveur démarré avec succès!');
+  console.log(`🚀 API disponible sur http://localhost:${PORT}`);
+  console.log(`📚 Documentation Swagger sur http://localhost:${PORT}/api-docs`);
+  console.log(`📝 Logging activé - Vous verrez tous les détails des requêtes\n`);
 });

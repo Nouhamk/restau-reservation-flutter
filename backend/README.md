@@ -57,6 +57,14 @@ npm start
 
 Le serveur démarre sur `http://localhost:3000`
 
+**Vous verrez maintenant des logs détaillés :**
+- 🔵 Requêtes entrantes
+- 🟢 Réponses réussies
+- 🔐 Tentatives d'authentification
+- ❌ Erreurs et échecs
+
+**Documentation complète du logging :** [`LOGGING.md`](./LOGGING.md)
+
 ## 📚 Documentation API (Swagger)
 
 Une documentation interactive complète est disponible via Swagger UI :
