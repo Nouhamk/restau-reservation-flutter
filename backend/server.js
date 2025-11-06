@@ -16,6 +16,7 @@ const menuRoutes = require('./routes/menu.route');
 const reservationRoutes = require('./routes/reservations.route');
 const placeRoutes = require('./routes/places.route');
 const timeSlotRoutes = require('./routes/timeSlots.route');
+const authMiddleware = require('./middlewares/auth');
 
 app.use('/api', authRoutes);
 app.use('/api/menu', menuRoutes);
