@@ -1,0 +1,142 @@
+const { getConnection } = require('../db');
+
+exports.createReservation = async (req, res) => {
+  const { reservation_date, reservation_time, guests, notes, place_id } = req.body;
+
+  if (!reservation_date || !reservation_time || !guests) {
+    return res.status(400).json({ error: 'Champs obligatoires manquants' });
+  }
+
+  try {
+    const connection = await getConnection();
+    
+    let existingQuery = 'SELECT SUM(guests) as total_guests FROM reservations WHERE reservation_date = ? AND reservation_time = ? AND status != "cancelled"';
+    const existingParams = [reservation_date, reservation_time];
+    if (place_id) {
+      existingQuery += ' AND place_id = ?';
+      existingParams.push(place_id);
+    }
+
+    const [existing] = await connection.execute(existingQuery, existingParams);
+
+    const [slot] = await connection.execute('SELECT max_capacity FROM time_slots WHERE slot_time = ?', [reservation_time]);
+    if (slot.length === 0) {
+      await connection.end();
+      return res.status(400).json({ error: 'Créneau horaire invalide' });
+    }
+
+    const currentCapacity = existing[0].total_guests || 0;
+    if (currentCapacity + guests > slot[0].max_capacity) {
+      await connection.end();
+      return res.status(400).json({ 
+        error: 'Plus de places disponibles pour ce créneau',
+        available: slot[0].max_capacity - currentCapacity
+      });
+    }
+
+    const [result] = await connection.execute(
+      'INSERT INTO reservations (user_id, reservation_date, reservation_time, guests, notes, place_id) VALUES (?, ?, ?, ?, ?, ?)',
+      [req.userId, reservation_date, reservation_time, guests, notes || null, place_id || null]
+    );
+
+    await connection.end();
+
+    res.status(201).json({ message: 'Réservation créée avec succès', reservationId: result.insertId });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+};
+
+exports.listReservations = async (req, res) => {
+  try {
+    const connection = await getConnection();
+    const { place_id } = req.query;
+
+    let query = 'SELECT * FROM reservations WHERE user_id = ?';
+    let params = [req.userId];
+
+    if (place_id) {
+      query += ' AND place_id = ?';
+      params.push(place_id);
+    }
+
+    if (req.userRole === 'host' || req.userRole === 'admin') {
+      query = 'SELECT r.*, u.name as user_name, u.email as user_email, u.phone as user_phone FROM reservations r JOIN users u ON r.user_id = u.id';
+      params = [];
+      if (place_id) {
+        query += ' WHERE r.place_id = ?';
+        params.push(place_id);
+      }
+    }
+
+    query += ' ORDER BY reservation_date DESC, reservation_time DESC';
+
+    const [reservations] = await connection.execute(query, params);
+    await connection.end();
+    res.json(reservations);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+};
+
+exports.updateReservation = async (req, res) => {
+  const { id } = req.params;
+  const { reservation_date, reservation_time, guests, notes } = req.body;
+  try {
+    const connection = await getConnection();
+    const [existing] = await connection.execute('SELECT * FROM reservations WHERE id = ? AND user_id = ?', [id, req.userId]);
+    if (existing.length === 0) {
+      await connection.end();
+      return res.status(404).json({ error: 'Réservation non trouvée' });
+    }
+
+    await connection.execute('UPDATE reservations SET reservation_date = ?, reservation_time = ?, guests = ?, notes = ? WHERE id = ?', [reservation_date, reservation_time, guests, notes || null, id]);
+    await connection.end();
+    res.json({ message: 'Réservation modifiée avec succès' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+};
+
+exports.cancelReservation = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const connection = await getConnection();
+    const [existing] = await connection.execute('SELECT * FROM reservations WHERE id = ? AND user_id = ?', [id, req.userId]);
+    if (existing.length === 0) {
+      await connection.end();
+      return res.status(404).json({ error: 'Réservation non trouvée' });
+    }
+
+    await connection.execute('UPDATE reservations SET status = "cancelled" WHERE id = ?', [id]);
+    await connection.end();
+    res.json({ message: 'Réservation annulée avec succès' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+};
+
+exports.patchStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  if (req.userRole !== 'host' && req.userRole !== 'admin') {
+    return res.status(403).json({ error: 'Accès interdit' });
+  }
+  if (!['confirmed', 'cancelled'].includes(status)) {
+    return res.status(400).json({ error: 'Statut invalide' });
+  }
+
+  try {
+    const connection = await getConnection();
+    await connection.execute('UPDATE reservations SET status = ? WHERE id = ?', [status, id]);
+    await connection.end();
+    res.json({ message: 'Statut mis à jour' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+};
