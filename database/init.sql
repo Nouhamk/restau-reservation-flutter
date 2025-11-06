@@ -16,7 +16,7 @@ CREATE TABLE default.reservations (
   reservation_date DATE NOT NULL,
   reservation_time TIME NOT NULL,
   guests INT NOT NULL,
-  status ENUM('pending', 'confirmed', 'cancelled') DEFAULT 'pending',
+  status ENUM('pending', 'confirmed', 'rejected', 'cancelled') DEFAULT 'pending',
   notes TEXT,
   place_id INT DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
