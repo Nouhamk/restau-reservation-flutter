@@ -176,6 +176,10 @@ L'application utilise une palette de couleurs elegante inspiree des pubs anglais
 - **Sage Green** (#87A878) : Elements naturels
 - **Light Background** (#FAF9F7) : Fond clair et apaisant
 
+### ✏️ Wireframes
+[Accéder aux wireframes](https://whimsical.com/flutter-projet-esgi-7DMXwHAwbQFd3HFqFqFvzR)
+
+
 ## 📁 Structure du Projet
 
 ```
