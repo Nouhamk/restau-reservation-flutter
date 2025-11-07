@@ -4,6 +4,7 @@ import '../models/user_model.dart';
 import '../theme/app_theme.dart';
 import '../widgets/practical_info_section.dart';
 import 'welcome_screen.dart';
+import 'admin_places_screen.dart';
 
 /// Écran d'accueil pour les ADMINISTRATEURS
 /// L'admin peut gérer les restaurants, menus et tout le système
@@ -39,7 +40,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       builder: (context) => AlertDialog(
         backgroundColor: AppTheme.lightSurface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Déconnexion', style: TextStyle(color: AppTheme.darkText)),
+        title: const Text('Déconnexion',
+            style: TextStyle(color: AppTheme.darkText)),
         content: const Text(
           'Êtes-vous sûr de vouloir vous déconnecter ?',
           style: TextStyle(color: AppTheme.mediumGrey),
@@ -75,7 +77,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     if (_isLoading) {
       return Scaffold(
         backgroundColor: AppTheme.lightBackground,
-        body: Center(child: CircularProgressIndicator(color: AppTheme.deepNavy)),
+        body:
+            Center(child: CircularProgressIndicator(color: AppTheme.deepNavy)),
       );
     }
 
@@ -100,7 +103,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                       title: 'Gérer les Restaurants',
                       description: 'Ajouter et modifier les restaurants',
                       color: AppTheme.deepNavy,
-                      onTap: () => _showComingSoon(),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => const AdminPlacesScreen()),
+                        );
+                      },
                     ),
                     const SizedBox(height: 16),
                     _buildAdminServiceCard(
@@ -224,7 +232,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppTheme.deepNavy.withOpacity(0.15), AppTheme.roseGold.withOpacity(0.1)],
+          colors: [
+            AppTheme.deepNavy.withOpacity(0.15),
+            AppTheme.roseGold.withOpacity(0.1)
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
