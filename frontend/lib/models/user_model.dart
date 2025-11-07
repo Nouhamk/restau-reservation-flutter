@@ -19,8 +19,8 @@ class User {
     return User(
       id: json['id'] as int?,
       email: json['email'] as String,
-      nom: json['nom'] as String?,
-      telephone: json['telephone'] as String?,
+      nom: json['name'] as String?,
+      telephone: json['phone'] as String?,
       role: json['role'] as String?,
     );
   }
@@ -30,8 +30,8 @@ class User {
     return {
       'id': id,
       'email': email,
-      'nom': nom,
-      'telephone': telephone,
+      'name': nom,
+      'phone': telephone,
       'role': role,
     };
   }

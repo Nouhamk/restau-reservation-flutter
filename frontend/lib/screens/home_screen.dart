@@ -93,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
           shaderCallback: (bounds) => AppTheme.goldGradient
               .createShader(Rect.fromLTWH(0, 0, bounds.width, bounds.height)),
           child: const Text(
-            'AU BUREAU',
+            'Les AL',
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,

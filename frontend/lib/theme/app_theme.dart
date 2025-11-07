@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Thème inspiré du style pub anglais "Au Bureau"
 /// Couleurs sombres, chaleureuses et élégantes
 class AppTheme {
   // Couleurs principales - Style pub anglais
