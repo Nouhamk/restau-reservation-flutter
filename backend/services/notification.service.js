@@ -22,6 +22,8 @@ transporter.verify((error, success) => {
   if (error) {
     console.error('❌ Email configuration error:', error.message);
     console.log('💡 Assurez-vous que EMAIL_USER et EMAIL_APP_PASSWORD sont définis dans .env');
+    console.log('❌ Email configuration error:', error.message);
+    console.log(process.env.EMAIL_USER);
   } else {
     console.log('✅ Email service ready - Server is ready to send emails');
   }
