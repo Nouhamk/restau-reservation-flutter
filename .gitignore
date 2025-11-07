@@ -21,6 +21,9 @@ frontend/*.ipr
 frontend/*.iws
 frontend/.DS_Store
 
+docs/node_modules/
+docs/.vitepress/cache/
+
 # Logs
 *.log
 

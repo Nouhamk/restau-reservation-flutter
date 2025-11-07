@@ -1,0 +1,154 @@
+/* Personnalisation du thème avec les couleurs de l'application Les AL */
+
+:root {
+  /* Couleurs principales */
+  --vp-c-brand: #2C3E50; /* deepNavy */
+  --vp-c-brand-light: #B76E79; /* roseGold */
+  --vp-c-brand-lighter: #D4A574; /* champagne */
+  --vp-c-brand-dark: #2C3E50;
+  --vp-c-brand-darker: #1A2634;
+
+  /* Background */
+  --vp-c-bg: #FAF9F7; /* lightBackground */
+  --vp-c-bg-soft: #FFFFFF; /* lightSurface */
+  --vp-c-bg-alt: #F5F1ED; /* warmBeige */
+
+  /* Text */
+  --vp-c-text-1: #2C2C2C; /* darkText */
+  --vp-c-text-2: #6B6B6B; /* secondaryGray */
+  --vp-c-text-3: #757575; /* mediumGrey */
+
+  /* Border */
+  --vp-c-divider: #E5E3DF; /* borderColor */
+  --vp-c-gutter: #E8E6E3; /* lightGrey */
+
+  /* Accent colors */
+  --vp-c-green: #87A878; /* sageGreen */
+  --vp-c-red: #8B4049; /* elegantBurgundy */
+  --vp-c-yellow: #D4A574; /* champagne */
+
+  /* Button */
+  --vp-button-brand-bg: #2C3E50;
+  --vp-button-brand-hover-bg: #B76E79;
+  --vp-button-brand-active-bg: #2C3E50;
+
+  /* Navbar */
+  --vp-nav-bg-color: #FFFFFF;
+  --vp-nav-screen-bg-color: #FAF9F7;
+
+  /* Sidebar */
+  --vp-sidebar-bg-color: #FFFFFF;
+
+  /* Code blocks */
+  --vp-code-bg: #F5F1ED;
+  --vp-code-block-bg: #FFFFFF;
+
+  /* Custom shadows */
+  --vp-shadow-1: 0 1px 2px rgba(44, 62, 80, 0.04);
+  --vp-shadow-2: 0 3px 12px rgba(44, 62, 80, 0.07);
+  --vp-shadow-3: 0 12px 32px rgba(44, 62, 80, 0.1);
+  --vp-shadow-4: 0 14px 44px rgba(44, 62, 80, 0.12);
+  --vp-shadow-5: 0 18px 56px rgba(44, 62, 80, 0.16);
+}
+
+/* Typography raffinée */
+.vp-doc h1, .vp-doc h2, .vp-doc h3 {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Logo dans la navbar */
+.VPNavBarTitle .title {
+  font-weight: 300;
+  letter-spacing: 4px;
+  color: var(--vp-c-brand);
+}
+
+/* Liens personnalisés */
+.vp-doc a {
+  color: #B76E79; /* roseGold */
+  text-decoration: none;
+  transition: color 0.25s;
+}
+
+.vp-doc a:hover {
+  color: #2C3E50; /* deepNavy */
+}
+
+/* Boutons */
+.VPButton.brand {
+  background-color: #2C3E50;
+  border-color: #2C3E50;
+}
+
+.VPButton.brand:hover {
+  background-color: #B76E79;
+  border-color: #B76E79;
+}
+
+/* Sidebar active link */
+.VPSidebarItem.is-active .link {
+  color: #B76E79 !important;
+  font-weight: 600;
+}
+
+/* Search */
+.DocSearch-Button {
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+}
+
+/* Cards et conteneurs */
+.vp-doc .custom-block {
+  border-radius: 8px;
+  border-width: 1.5px;
+}
+
+.vp-doc .tip {
+  border-color: #87A878; /* sageGreen */
+}
+
+.vp-doc .warning {
+  border-color: #D4A574; /* champagne */
+}
+
+.vp-doc .danger {
+  border-color: #8B4049; /* elegantBurgundy */
+}
+
+/* Code inline */
+.vp-doc code {
+  background-color: #F5F1ED;
+  color: #2C3E50;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* Tables élégantes */
+.vp-doc table {
+  border-color: var(--vp-c-divider);
+}
+
+.vp-doc th {
+  background-color: #F5F1ED;
+  color: #2C3E50;
+  font-weight: 600;
+}
+
+/* Footer personnalisé */
+.VPFooter {
+  border-top: 1px solid var(--vp-c-divider);
+}
+
+/* Animations douces */
+.VPButton, .VPSidebarItem .link, .vp-doc a {
+  transition: all 0.25s ease;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .VPNavBarTitle .title {
+    letter-spacing: 2px;
+  }
+}
