@@ -128,7 +128,6 @@ Utilisez ces comptes pour tester les differents roles :
 - ✅ Modification de reservations existantes
 - ✅ Annulation de reservations
 - ✅ Historique des reservations
-- ✅ Demandes speciales (allergies, preferences)
 
 ### Pour les Hotes
 - ✅ Tableau de bord avec statistiques
@@ -282,19 +281,6 @@ Le projet suit une methodologie Agile avec :
 - **Noureddine BENSADOK** - Backend, API, Base de donnees
 - **Ilias Abdelkader EZZAROUALI** - Systeme de reservations
 
-## 🧪 Tests
-
-### Lancer les Tests Backend
-```bash
-cd backend
-npm test
-```
-
-### Lancer les Tests Flutter
-```bash
-cd frontend
-flutter test
-```
 
 ## 📝 License
 
