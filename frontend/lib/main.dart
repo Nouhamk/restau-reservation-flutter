@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'services/auth_service.dart';
-import 'screens/login_screen.dart';
+import 'screens/welcome_screen.dart';
 import 'screens/home_screen.dart';
 import 'theme/app_theme.dart';
 
@@ -98,6 +98,6 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
     }
 
     // Rediriger vers l'écran approprié
-    return _isLoggedIn ? const HomeScreen() : const LoginScreen();
+    return _isLoggedIn ? const HomeScreen() : const WelcomeScreen();
   }
 }
