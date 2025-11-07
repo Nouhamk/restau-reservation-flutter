@@ -20,7 +20,7 @@ class AdminService {
   }
 
   Future<Map<String, dynamic>> getStats() async {
-    final url = Uri.parse('$_base/api/admin/stats');
+    final url = Uri.parse('$_base/admin/stats');
     final res = await http.get(url, headers: await _headers());
     if (res.statusCode == 200) {
       final data = json.decode(res.body) as Map<String, dynamic>;
