@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/practical_info_section.dart';
 import 'login_screen.dart';
+import 'menu_screen.dart';
 import 'register_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -140,22 +141,12 @@ class WelcomeScreen extends StatelessWidget {
                 color: Colors.transparent,
                 child: InkWell(
                   borderRadius: BorderRadius.circular(8),
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text(
-                          'Connectez-vous pour consulter notre carte',
-                          style: TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                        backgroundColor: AppTheme.deepNavy,
-                        behavior: SnackBarBehavior.floating,
-                        duration: const Duration(seconds: 2),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    );
-                  },
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const MenuPage(),
+                    ),
+                  ),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

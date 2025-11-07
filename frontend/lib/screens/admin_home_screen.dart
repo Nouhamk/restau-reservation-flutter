@@ -3,6 +3,7 @@ import '../services/auth_service.dart';
 import '../models/user_model.dart';
 import '../theme/app_theme.dart';
 import '../widgets/practical_info_section.dart';
+import 'menu_screen.dart';
 import 'welcome_screen.dart';
 import 'admin_places_screen.dart';
 import '../services/admin_service.dart';
@@ -146,10 +147,17 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     const SizedBox(height: 16),
                     _buildAdminServiceCard(
                       icon: Icons.menu_book_rounded,
-                      title: 'Gérer les Menus',
-                      description: 'Éditer les cartes et les plats',
+                      title: 'Gérer le Menu',
+                      description: 'Éditer la carte et les plats',
                       color: AppTheme.roseGold,
-                      onTap: () => _showComingSoon(),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => MenuPage(currentUser: _currentUser,),
+                          ),
+                        );
+                      }
                     ),
                     const SizedBox(height: 16),
                     _buildAdminServiceCard(
