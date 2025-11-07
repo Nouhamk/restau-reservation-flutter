@@ -23,7 +23,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   User? _currentUser;
   bool _isLoading = true;
   bool _statsLoading = true;
-  Map<String, int> _stats = {
+  Map<String, dynamic> _stats = {
     'restaurants': 0,
     'clients': 0,
     'hosts': 0,
@@ -49,18 +49,29 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     setState(() => _statsLoading = true);
     try {
       final result = await _adminService.getStats();
-      setState(() {
-        _stats = {
-          'restaurants': (result['restaurants'] as num).toInt(),
-          'clients': (result['clients'] as num).toInt(),
-          'hosts': (result['hosts'] as num).toInt(),
-          'reservations': (result['reservations'] as num).toInt(),
-        };
-      });
+      if (mounted) {
+        setState(() {
+          _stats = {
+            'restaurants': (result['restaurants'] ?? 0) is int 
+                ? result['restaurants'] ?? 0 
+                : ((result['restaurants'] ?? 0) as num).toInt(),
+            'clients': (result['clients'] ?? 0) is int 
+                ? result['clients'] ?? 0 
+                : ((result['clients'] ?? 0) as num).toInt(),
+            'hosts': (result['hosts'] ?? 0) is int 
+                ? result['hosts'] ?? 0 
+                : ((result['hosts'] ?? 0) as num).toInt(),
+            'reservations': (result['reservations'] ?? 0) is int 
+                ? result['reservations'] ?? 0 
+                : ((result['reservations'] ?? 0) as num).toInt(),
+          };
+        });
+      }
     } catch (e) {
+      print('Erreur lors du chargement des stats: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur chargement statistiques')),
+          const SnackBar(content: Text('Erreur chargement statistiques')),
         );
       }
     } finally {
@@ -360,13 +371,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           Row(
             children: [
               Expanded(
-                child: _buildStatItem('${_stats['restaurants']}', 'Restaurants',
+                child: _buildStatItem('${_stats['restaurants'] ?? 0}', 'Restaurants',
                     AppTheme.deepNavy),
               ),
               Container(width: 1, height: 40, color: AppTheme.lightGrey),
               Expanded(
                 child: _buildStatItem(
-                    '${_stats['clients']}', 'Clients', AppTheme.roseGold),
+                    '${_stats['clients'] ?? 0}', 'Clients', AppTheme.roseGold),
               ),
             ],
           ),
@@ -377,11 +388,11 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
             children: [
               Expanded(
                 child: _buildStatItem(
-                    '${_stats['hosts']}', 'Hôtes', AppTheme.champagne),
+                    '${_stats['hosts'] ?? 0}', 'Hôtes', AppTheme.champagne),
               ),
               Container(width: 1, height: 40, color: AppTheme.lightGrey),
               Expanded(
-                child: _buildStatItem('${_stats['reservations']}',
+                child: _buildStatItem('${_stats['reservations'] ?? 0}',
                     'Réservations', AppTheme.sageGreen),
               ),
             ],
