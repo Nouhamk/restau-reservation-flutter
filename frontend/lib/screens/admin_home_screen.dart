@@ -7,6 +7,7 @@ import 'menu_screen.dart';
 import 'welcome_screen.dart';
 import 'admin_places_screen.dart';
 import '../services/admin_service.dart';
+import 'host_reservations_screen.dart';
 
 /// Écran d'accueil pour les ADMINISTRATEURS
 /// L'admin peut gérer les restaurants, menus et tout le système
@@ -184,7 +185,14 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                       title: 'Toutes les Réservations',
                       description: 'Vue globale des réservations',
                       color: AppTheme.sageGreen,
-                      onTap: () => _showComingSoon(),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const HostReservationsScreen(),
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 24),
                     _buildSystemStats(),

@@ -4,6 +4,7 @@ import '../models/user_model.dart';
 import '../theme/app_theme.dart';
 import '../widgets/practical_info_section.dart';
 import 'welcome_screen.dart';
+import 'host_reservations_screen.dart';
 
 /// Écran d'accueil pour les HÔTES
 /// L'hôte peut gérer les réservations et le plan de table
@@ -101,7 +102,14 @@ class _HostHomeScreenState extends State<HostHomeScreen> {
                       description: 'Voir et confirmer les réservations',
                       color: AppTheme.champagne,
                       badge: '5 nouvelles',
-                      onTap: () => _showComingSoon(),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const HostReservationsScreen(),
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 16),
                     _buildHostServiceCard(

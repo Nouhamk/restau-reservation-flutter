@@ -5,6 +5,7 @@ import '../theme/app_theme.dart';
 import '../widgets/practical_info_section.dart';
 import 'menu_screen.dart';
 import 'welcome_screen.dart';
+import 'client_reservations_screen.dart';
 
 /// Écran d'accueil pour les CLIENTS
 /// Le client peut gérer ses réservations
@@ -116,7 +117,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                       title: 'Réserver une Table',
                       description: 'Choisissez votre créneau idéal',
                       color: AppTheme.champagne,
-                      onTap: () => _showComingSoon(),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ClientReservationsScreen(),
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 16),
                     _buildClientServiceCard(
@@ -124,7 +132,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                       title: 'Mes Réservations',
                       description: 'Gérez vos réservations en cours',
                       color: AppTheme.sageGreen,
-                      onTap: () => _showComingSoon(),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ClientReservationsScreen(),
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 24),
                     PracticalInfoSection(),

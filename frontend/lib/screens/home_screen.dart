@@ -7,6 +7,7 @@ import 'host_home_screen.dart';
 import 'admin_home_screen.dart';
 import 'welcome_screen.dart';
 
+
 /// Routeur qui redirige vers le bon écran d'accueil selon le rôle de l'utilisateur
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
