@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import '../services/auth_service.dart';
+import '../models/user_model.dart';
 import '../widgets/custom_text_field.dart';
 import '../theme/app_theme.dart';
 import 'register_screen.dart';
 import 'home_screen.dart';
+import 'admin_home_screen.dart';
+import 'host_home_screen.dart';
+import 'client_home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -55,9 +59,32 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
+      // Récupération directe du rôle pour améliorer la vitesse de redirection
+      final user = result['user'] as User?; // On s'attend à un User dans result
+      final role = user?.role?.toLowerCase();
+
+      Widget destination;
+      switch (role) {
+        case 'admin':
+        case 'administrateur':
+          destination = const AdminHomeScreen();
+          break;
+        case 'host':
+        case 'hote':
+        case 'hôte':
+          destination = const HostHomeScreen();
+          break;
+        case 'client':
+        case 'customer':
+        default:
+          destination = const ClientHomeScreen();
+          break;
+      }
+
+      // Utiliser HomeScreen uniquement si on veut laisser la logique centrale (fallback)
+      // destination = const HomeScreen();
+
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => destination));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
