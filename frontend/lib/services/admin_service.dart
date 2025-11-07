@@ -34,4 +34,16 @@ class AdminService {
     }
     throw Exception('Failed to fetch stats (${res.statusCode})');
   }
+
+  /// Obtenir la liste de tous les restaurants/places
+  Future<List<Map<String, dynamic>>> getPlaces() async {
+    final url = Uri.parse('$_base/places');
+    final res = await http.get(url, headers: await _headers());
+    
+    if (res.statusCode == 200) {
+      final data = json.decode(res.body) as List;
+      return data.map((item) => item as Map<String, dynamic>).toList();
+    }
+    throw Exception('Failed to fetch places (${res.statusCode})');
+  }
 }
