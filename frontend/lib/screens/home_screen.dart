@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../models/user_model.dart';
 import '../theme/app_theme.dart';
-import 'login_screen.dart';
+import '../widgets/practical_info_section.dart';
+import 'welcome_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -34,18 +35,12 @@ class _HomeScreenState extends State<HomeScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppTheme.backgroundDark,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: AppTheme.accentGold.withOpacity(0.3)),
-        ),
-        title: const Text(
-          'Déconnexion',
-          style: TextStyle(color: AppTheme.accentGold),
-        ),
+        backgroundColor: AppTheme.lightSurface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Déconnexion', style: TextStyle(color: AppTheme.darkText)),
         content: const Text(
           'Êtes-vous sûr de vouloir vous déconnecter ?',
-          style: TextStyle(color: AppTheme.creamWhite),
+          style: TextStyle(color: AppTheme.mediumGrey),
         ),
         actions: [
           TextButton(
@@ -55,7 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.warmRed,
+              backgroundColor: const Color(0xFFD32F2F),
+              foregroundColor: Colors.white,
             ),
             child: const Text('Déconnexion'),
           ),
@@ -65,11 +61,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (confirm == true) {
       await _authService.logout();
-
       if (!mounted) return;
-
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        MaterialPageRoute(builder: (context) => const WelcomeScreen()),
       );
     }
   }
@@ -78,272 +72,66 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return Scaffold(
-        body: Container(
-          decoration: BoxDecoration(gradient: AppTheme.primaryGradient),
-          child: const Center(
-            child: CircularProgressIndicator(color: AppTheme.accentGold),
-          ),
-        ),
+        backgroundColor: AppTheme.lightBackground,
+        body: Center(child: CircularProgressIndicator(color: AppTheme.softBlack)),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: ShaderMask(
-          shaderCallback: (bounds) => AppTheme.goldGradient
-              .createShader(Rect.fromLTWH(0, 0, bounds.width, bounds.height)),
-          child: const Text(
-            'Les AL',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 2,
-            ),
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout, color: AppTheme.accentGold),
-            onPressed: _handleLogout,
-            tooltip: 'Se déconnecter',
-          ),
-        ],
-      ),
-      body: Container(
-        decoration: BoxDecoration(gradient: AppTheme.primaryGradient),
+      backgroundColor: AppTheme.lightBackground,
+      body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Carte de profil style cuir
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: AppTheme.backgroundDark,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: AppTheme.accentGold.withOpacity(0.3),
-                    width: 2,
-                  ),
-                  boxShadow: AppTheme.leatherShadow,
-                ),
+              // En-tête compact
+              _buildHeader(),
+
+              // Corps principal
+              Padding(
+                padding: const EdgeInsets.all(20.0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Avatar doré
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: AppTheme.goldGradient,
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppTheme.accentGold.withOpacity(0.3),
-                            blurRadius: 12,
-                            spreadRadius: 2,
-                          ),
-                        ],
-                      ),
-                      child: const Icon(
-                        Icons.person,
-                        size: 60,
-                        color: AppTheme.primaryDark,
-                      ),
+                    // Services rapides
+                    _buildSectionTitle('Services rapides'),
+                    const SizedBox(height: 16),
+                    _buildQuickActionsRow(),
+
+                    const SizedBox(height: 32),
+
+                    // Services principaux
+                    _buildSectionTitle('Nos services'),
+                    const SizedBox(height: 16),
+                    _buildMainServiceCard(
+                      icon: Icons.restaurant_menu_rounded,
+                      title: 'Notre Carte',
+                      description: 'Découvrez nos plats et boissons',
+                      color: AppTheme.roseGold,
+                      onTap: () => _showComingSoon(),
                     ),
-                    const SizedBox(height: 20),
-
-                    // Ligne décorative
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Divider(
-                            color: AppTheme.accentGold.withOpacity(0.3),
-                            thickness: 1,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Icon(
-                            Icons.star,
-                            color: AppTheme.accentGold.withOpacity(0.5),
-                            size: 16,
-                          ),
-                        ),
-                        Expanded(
-                          child: Divider(
-                            color: AppTheme.accentGold.withOpacity(0.3),
-                            thickness: 1,
-                          ),
-                        ),
-                      ],
+                    const SizedBox(height: 16),
+                    _buildMainServiceCard(
+                      icon: Icons.event_available_rounded,
+                      title: 'Réserver une Table',
+                      description: 'Choisissez votre créneau idéal',
+                      color: AppTheme.champagne,
+                      onTap: () => _showComingSoon(),
                     ),
-                    const SizedBox(height: 20),
-
-                    // Bienvenue
-                    ShaderMask(
-                      shaderCallback: (bounds) => AppTheme.goldGradient
-                          .createShader(Rect.fromLTWH(0, 0, bounds.width, bounds.height)),
-                      child: const Text(
-                        'BIENVENUE',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 2,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-
-                    // Nom
-                    if (_currentUser?.nom != null && _currentUser!.nom!.isNotEmpty)
-                      Text(
-                        _currentUser!.nom!,
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w600,
-                          color: AppTheme.creamWhite,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    const SizedBox(height: 8),
-
-                    // Email
-                    Text(
-                      _currentUser?.email ?? 'Aucun email',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: AppTheme.creamWhite.withOpacity(0.7),
-                      ),
-                      textAlign: TextAlign.center,
+                    const SizedBox(height: 16),
+                    _buildMainServiceCard(
+                      icon: Icons.list_alt_rounded,
+                      title: 'Mes Réservations',
+                      description: 'Gérez vos réservations en cours',
+                      color: AppTheme.sageGreen,
+                      onTap: () => _showComingSoon(),
                     ),
 
-                    // Téléphone
-                    if (_currentUser?.telephone != null &&
-                        _currentUser!.telephone!.isNotEmpty) ...[
-                      const SizedBox(height: 4),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.phone,
-                            size: 14,
-                            color: AppTheme.accentGold.withOpacity(0.6),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            _currentUser!.telephone!,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: AppTheme.creamWhite.withOpacity(0.6),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                    const SizedBox(height: 32),
+
+                    // Informations pratiques
+                    PracticalInfoSection(),
                   ],
                 ),
-              ),
-              const SizedBox(height: 32),
-
-              // Message de succès
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: AppTheme.deepGreen.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: AppTheme.deepGreen.withOpacity(0.4),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.check_circle, color: AppTheme.accentGold),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'Connexion réussie !',
-                        style: TextStyle(
-                          color: AppTheme.creamWhite,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 32),
-
-              // Section titre
-              Text(
-                'NOS SERVICES',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2,
-                  color: AppTheme.accentGold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 4),
-              Divider(
-                color: AppTheme.accentGold.withOpacity(0.3),
-                thickness: 1,
-                indent: 100,
-                endIndent: 100,
-              ),
-              const SizedBox(height: 24),
-
-              // Boutons de navigation
-              _buildNavigationButton(
-                context,
-                icon: Icons.restaurant_menu,
-                title: 'Notre Carte',
-                subtitle: 'Découvrez nos plats & boissons',
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Fonctionnalité à venir')),
-                  );
-                },
-              ),
-              const SizedBox(height: 16),
-
-              _buildNavigationButton(
-                context,
-                icon: Icons.calendar_today,
-                title: 'Réserver une Table',
-                subtitle: 'Choisissez votre créneau idéal',
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Fonctionnalité à venir')),
-                  );
-                },
-              ),
-              const SizedBox(height: 16),
-
-              _buildNavigationButton(
-                context,
-                icon: Icons.list_alt,
-                title: 'Mes Réservations',
-                subtitle: 'Gérez vos réservations en cours',
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Fonctionnalité à venir')),
-                  );
-                },
-              ),
-              const SizedBox(height: 16),
-
-              _buildNavigationButton(
-                context,
-                icon: Icons.info_outline,
-                title: 'Informations',
-                subtitle: 'Horaires, localisation, contact',
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Fonctionnalité à venir')),
-                  );
-                },
               ),
             ],
           ),
@@ -352,103 +140,246 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildNavigationButton(
-      BuildContext context, {
-        required IconData icon,
-        required String title,
-        required String subtitle,
-        required VoidCallback onTap,
-      }) {
+  Widget _buildHeader() {
     return Container(
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppTheme.backgroundDark,
-            AppTheme.backgroundDark.withOpacity(0.8),
-          ],
-        ),
-        border: Border.all(
-          color: AppTheme.accentGold.withOpacity(0.3),
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 6,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        color: AppTheme.lightSurface,
+        boxShadow: AppTheme.softShadow,
       ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(
+      child: Row(
+        children: [
+          // Avatar avec gradient
+          Container(
+            padding: EdgeInsets.all(3),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: AppTheme.roseGoldGradient,
+            ),
+            child: CircleAvatar(
+              radius: 25,
+              backgroundColor: AppTheme.deepNavy,
+              child: Text(
+                _currentUser?.nom?.substring(0, 1).toUpperCase() ?? 'U',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+
+          // Info utilisateur
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Icône avec fond doré
-                Container(
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    gradient: AppTheme.goldGradient,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppTheme.accentGold.withOpacity(0.3),
-                        blurRadius: 8,
-                        spreadRadius: 1,
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    icon,
-                    color: AppTheme.primaryDark,
-                    size: 28,
+                Text(
+                  'Bonjour,',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: AppTheme.mediumGrey,
                   ),
                 ),
-                const SizedBox(width: 20),
-
-                // Texte
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.creamWhite,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        subtitle,
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: AppTheme.creamWhite.withOpacity(0.7),
-                        ),
-                      ),
-                    ],
+                Text(
+                  _currentUser?.nom ?? 'Utilisateur',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.deepNavy,
                   ),
-                ),
-
-                // Flèche
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 18,
-                  color: AppTheme.accentGold.withOpacity(0.6),
                 ),
               ],
             ),
           ),
+
+          // Bouton déconnexion
+          IconButton(
+            icon: Icon(Icons.logout_rounded, color: AppTheme.roseGold),
+            onPressed: _handleLogout,
+            tooltip: 'Se déconnecter',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Text(
+      title,
+      style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        color: AppTheme.darkText,
+        letterSpacing: 0.5,
+      ),
+    );
+  }
+
+  Widget _buildQuickActionsRow() {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildQuickActionCard(
+            icon: Icons.phone_rounded,
+            label: 'Appeler',
+            onTap: () => _showComingSoon(),
+          ),
         ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildQuickActionCard(
+            icon: Icons.location_on_rounded,
+            label: 'Itinéraire',
+            onTap: () => _showComingSoon(),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildQuickActionCard(
+            icon: Icons.share_rounded,
+            label: 'Partager',
+            onTap: () => _showComingSoon(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQuickActionCard({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 16),
+          decoration: BoxDecoration(
+            gradient: AppTheme.subtleCardGradient,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: AppTheme.lightGrey,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.roseGold.withOpacity(0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppTheme.roseGold.withOpacity(0.15),
+                ),
+                child: Icon(icon, color: AppTheme.roseGold, size: 24),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: AppTheme.darkText,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMainServiceCard({
+    required IconData icon,
+    required String title,
+    required String description,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: AppTheme.lightSurface,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: AppTheme.lightGrey,
+              width: 1.5,
+            ),
+            boxShadow: AppTheme.cardShadow,
+          ),
+          child: Row(
+            children: [
+              // Icône
+              Container(
+                padding: EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: color, size: 32),
+              ),
+              const SizedBox(width: 16),
+
+              // Texte
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.darkText,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      description,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: AppTheme.mediumGrey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Flèche
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: color.withOpacity(0.5),
+                size: 18,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showComingSoon() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Fonctionnalité à venir'),
+        backgroundColor: AppTheme.softBlack,
+        behavior: SnackBarBehavior.floating,
       ),
     );
   }
