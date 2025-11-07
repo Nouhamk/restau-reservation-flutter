@@ -2,10 +2,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/user_model.dart';
+import '../config/api_config.dart';
 
 class AuthService {
-  static const String baseUrl = 'http://10.0.2.2:3000/api'; // Pour émulateur Android (localhost)
-
   // Stockage sécurisé pour le token
   final _storage = const FlutterSecureStorage();
 
@@ -14,6 +13,7 @@ class AuthService {
   static const String _userKey = 'user_data';
 
   /// Inscription d'un nouvel utilisateur
+  /// Adapté au format de votre backend existant
   Future<Map<String, dynamic>> register({
     required String email,
     required String password,
@@ -21,16 +21,21 @@ class AuthService {
     String? telephone,
   }) async {
     try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/register'),
-        headers: {'Content-Type': 'application/json'},
+      final response = await http
+          .post(
+        Uri.parse('${ApiConfig.baseUrl}${ApiConfig.registerEndpoint}'),
+        headers: ApiConfig.defaultHeaders,
         body: jsonEncode({
           'email': email,
           'password': password,
-          'nom': nom,
-          'telephone': telephone,
+          'name': nom, // Votre backend utilise "name" pas "nom"
+          'phone': telephone, // Votre backend utilise "phone" pas "telephone"
         }),
-      );
+      )
+          .timeout(ApiConfig.timeout);
+
+      print('Register response status: ${response.statusCode}');
+      print('Register response body: ${response.body}');
 
       final data = jsonDecode(response.body);
 
@@ -52,10 +57,21 @@ class AuthService {
         // Erreur
         return {
           'success': false,
-          'message': data['message'] ?? 'Erreur lors de l\'inscription',
+          'message': data['message'] ?? data['error'] ?? 'Erreur lors de l\'inscription',
         };
       }
+    } on http.ClientException catch (e) {
+      return {
+        'success': false,
+        'message': 'Erreur de connexion au serveur. Vérifiez votre connexion internet.',
+      };
+    } on FormatException catch (e) {
+      return {
+        'success': false,
+        'message': 'Erreur de format de réponse du serveur.',
+      };
     } catch (e) {
+      print('Register error: $e');
       return {
         'success': false,
         'message': 'Erreur de connexion : ${e.toString()}',
@@ -69,14 +85,19 @@ class AuthService {
     required String password,
   }) async {
     try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/login'),
-        headers: {'Content-Type': 'application/json'},
+      final response = await http
+          .post(
+        Uri.parse('${ApiConfig.baseUrl}${ApiConfig.loginEndpoint}'),
+        headers: ApiConfig.defaultHeaders,
         body: jsonEncode({
           'email': email,
           'password': password,
         }),
-      );
+      )
+          .timeout(ApiConfig.timeout);
+
+      print('Login response status: ${response.statusCode}');
+      print('Login response body: ${response.body}');
 
       final data = jsonDecode(response.body);
 
@@ -98,10 +119,21 @@ class AuthService {
         // Erreur
         return {
           'success': false,
-          'message': data['message'] ?? 'Email ou mot de passe incorrect',
+          'message': data['message'] ?? data['error'] ?? 'Email ou mot de passe incorrect',
         };
       }
+    } on http.ClientException catch (e) {
+      return {
+        'success': false,
+        'message': 'Erreur de connexion au serveur. Vérifiez que le backend est accessible.',
+      };
+    } on FormatException catch (e) {
+      return {
+        'success': false,
+        'message': 'Erreur de format de réponse du serveur.',
+      };
     } catch (e) {
+      print('Login error: $e');
       return {
         'success': false,
         'message': 'Erreur de connexion : ${e.toString()}',
@@ -148,9 +180,9 @@ class AuthService {
   /// Récupérer les headers avec authentification
   Future<Map<String, String>> getAuthHeaders() async {
     final token = await getToken();
-    return {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token',
-    };
+    if (token == null) {
+      throw Exception('Token manquant - utilisateur non connecté');
+    }
+    return ApiConfig.authHeaders(token);
   }
 }
