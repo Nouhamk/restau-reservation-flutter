@@ -1,76 +1,77 @@
-﻿import { defineConfig } from 'vitepress'
+import { defineConfig } from ''vitepress''
 
 export default defineConfig({
-  title: 'Les AL - Documentation',
-  description: 'Documentation technique du systeme de reservation pour pub anglais',
+  title: ''Les AL - Documentation'',
+  description: ''Documentation technique du systeme de reservation pour pub anglais'',
+  base: ''/restau-reservation-flutter/'',
   
   themeConfig: {
-    logo: '/logo.svg',
-    siteTitle: 'Les AL',
+    logo: ''/logo.svg'',
+    siteTitle: ''Les AL'',
     
     nav: [
-      { text: 'Accueil', link: '/' },
-      { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'Projet', link: '/guide/gestion-taches' },
-      { text: 'API', link: '/api/endpoints' }
+      { text: ''Accueil'', link: ''/"'' },
+      { text: ''Guide'', link: ''/guide/getting-started'' },
+      { text: ''Projet'', link: ''/guide/gestion-taches'' },
+      { text: ''API'', link: ''/api/endpoints'' }
     ],
 
     sidebar: {
-      '/guide/': [
+      ''/guide/'': [
         {
-          text: 'Guide de demarrage',
+          text: ''Guide de demarrage'',
           items: [
-            { text: 'Introduction', link: '/guide/getting-started' },
-            { text: 'Gestion des taches', link: '/guide/gestion-taches' },
-            { text: 'Gestion des roles', link: '/guide/roles' }
+            { text: ''Introduction'', link: ''/guide/getting-started'' },
+            { text: ''Gestion des taches'', link: ''/guide/gestion-taches'' },
+            { text: ''Gestion des roles'', link: ''/guide/roles'' }
           ]
         }
       ],
-      '/frontend/': [
+      ''/frontend/'': [
         {
-          text: 'Frontend Flutter',
+          text: ''Frontend Flutter'',
           items: [
-            { text: 'Architecture', link: '/frontend/architecture' },
-            { text: 'Ecrans', link: '/frontend/screens' },
-            { text: 'Services', link: '/frontend/services' },
-            { text: 'Theme et design', link: '/frontend/theme' },
-            { text: 'Navigation', link: '/frontend/navigation' }
+            { text: ''Architecture'', link: ''/frontend/architecture'' },
+            { text: ''Ecrans'', link: ''/frontend/screens'' },
+            { text: ''Services'', link: ''/frontend/services'' },
+            { text: ''Theme et design'', link: ''/frontend/theme'' },
+            { text: ''Navigation'', link: ''/frontend/navigation'' }
           ]
         }
       ],
-      '/api/': [
+      ''/api/'': [
         {
-          text: 'Documentation API',
+          text: ''Documentation API'',
           items: [
-            { text: 'Endpoints', link: '/api/endpoints' },
+            { text: ''Endpoints'', link: ''/api/endpoints'' }
           ]
         }
       ]
     },
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/Nouhamk/restau-reservation-flutter' }
+      { icon: ''github'', link: ''https://github.com/Nouhamk/restau-reservation-flutter'' }
     ],
 
     footer: {
-      message: 'Documentation du systeme de reservation Les AL',
-      copyright: 'Copyright 2025 Les AL - Projet academique'
+      message: ''Documentation du systeme de reservation Les AL'',
+      copyright: ''Copyright 2025 Les AL - Projet academique''
     },
 
     search: {
-      provider: 'local'
+      provider: ''local''
     },
 
     editLink: {
-      pattern: 'https://github.com/Nouhamk/restau-reservation-flutter/edit/main/docs/:path',
-      text: 'Modifier cette page sur GitHub'
+      pattern: ''https://github.com/Nouhamk/restau-reservation-flutter/edit/nouhamk/frontend/docs/:path'',
+      text: ''Modifier cette page sur GitHub''
     },
 
     lastUpdated: {
-      text: 'Derniere mise a jour',
+      text: ''Derniere mise a jour'',
       formatOptions: {
-        dateStyle: 'short',
-        timeStyle: 'short'
+        dateStyle: ''short'',
+        timeStyle: ''short''
       }
     }
   },
@@ -78,8 +79,8 @@ export default defineConfig({
   markdown: {
     lineNumbers: true,
     theme: {
-      light: 'github-light',
-      dark: 'github-dark'
+      light: ''github-light'',
+      dark: ''github-dark''
     }
   }
 })

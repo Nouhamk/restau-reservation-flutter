@@ -1,4 +1,4 @@
-name: Déployer la documentation
+name: Deployer la documentation
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
       - nouhamk/frontend
     paths:
-      - 'docs/**'
+      - ''docs/**''
   workflow_dispatch:
 
 permissions:
