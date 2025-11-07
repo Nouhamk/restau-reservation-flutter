@@ -111,6 +111,14 @@ Utilisez ces comptes pour tester les differents roles :
 - Email : `test@lesAL.com`
 - Password : `test123`
 
+**Hôtes**
+- Email : `host@restaurantAL.com`
+- Passowrd : `securePassword123`
+
+**Admin**
+- Email : `admin@restaurantAL.com`
+- Password `securePassword123`
+
 ## ✨ Fonctionnalites Realisees
 
 ### Authentification et Securite

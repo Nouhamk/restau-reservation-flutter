@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const timeSlotController = require('../controllers/timeSlot.controller');
+const authMiddleware = require('../middlewares/auth');
 
 /**
  * @swagger
@@ -74,6 +75,66 @@ router.get('/', timeSlotController.listTimeSlots);
  *         $ref: '#/components/responses/ServerError'
  */
 router.get('/availability', timeSlotController.checkAvailability);
+
+/**
+ * @swagger
+ * /api/time-slots:
+ *   post:
+ *     summary: Créer un créneau horaire (admin seulement)
+ *     tags: [Time Slots]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               slot_time:
+ *                 type: string
+ *                 format: time
+ *                 example: "19:00:00"
+ *               max_capacity:
+ *                 type: integer
+ *                 example: 50
+ *     responses:
+ *       201:
+ *         description: Créneau créé
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
+ *       403:
+ *         description: Accès interdit
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
+router.post('/', authMiddleware, timeSlotController.createTimeSlot);
+
+/**
+ * @swagger
+ * /api/time-slots/{id}:
+ *   delete:
+ *     summary: Supprimer un créneau horaire (admin seulement)
+ *     tags: [Time Slots]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Créneau supprimé
+ *       403:
+ *         description: Accès interdit
+ *       404:
+ *         description: Créneau non trouvé
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
+router.delete('/:id', authMiddleware, timeSlotController.deleteTimeSlot);
 
 module.exports = router;
 
