@@ -3,6 +3,7 @@ import '../services/auth_service.dart';
 import '../models/user_model.dart';
 import '../theme/app_theme.dart';
 import '../widgets/practical_info_section.dart';
+import 'menu_screen.dart';
 import 'welcome_screen.dart';
 
 /// Écran d'accueil pour les CLIENTS
@@ -100,7 +101,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                       title: 'Consulter la Carte',
                       description: 'Découvrez nos plats et boissons',
                       color: AppTheme.roseGold,
-                      onTap: () => _showComingSoon(),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const MenuPage(),
+                          ),
+                        );
+                      }
                     ),
                     const SizedBox(height: 16),
                     _buildClientServiceCard(
