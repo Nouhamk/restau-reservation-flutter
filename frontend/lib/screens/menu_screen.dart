@@ -315,7 +315,7 @@ class _MenuPageState extends State<MenuPage> {
           ),
           if (_isAdmin)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
+              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -324,7 +324,7 @@ class _MenuPageState extends State<MenuPage> {
                     onPressed: () => _showItemForm(item: item),
                     style: TextButton.styleFrom(
                       foregroundColor: AppTheme.roseGold,
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                     ),
                     child: const Text('Éditer'),
                   ),
@@ -333,7 +333,7 @@ class _MenuPageState extends State<MenuPage> {
                     onPressed: () => _confirmDelete(item),
                     style: TextButton.styleFrom(
                       foregroundColor: AppTheme.elegantBurgundy,
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                     ),
                     child: const Text('Supprimer'),
                   ),

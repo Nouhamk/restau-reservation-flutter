@@ -173,14 +173,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     ),
                     const SizedBox(height: 16),
                     _buildAdminServiceCard(
-                      icon: Icons.people_rounded,
-                      title: 'Gérer les Utilisateurs',
-                      description: 'Clients, hôtes et administrateurs',
-                      color: AppTheme.champagne,
-                      onTap: () => _showComingSoon(),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildAdminServiceCard(
                       icon: Icons.calendar_month_rounded,
                       title: 'Toutes les Réservations',
                       description: 'Vue globale des réservations',

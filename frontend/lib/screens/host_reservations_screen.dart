@@ -185,7 +185,7 @@ class _HostReservationsScreenState extends State<HostReservationsScreen> with Si
                   if (_pendingReservations.isNotEmpty) ...[
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
                       decoration: BoxDecoration(
                         color: AppTheme.champagne,
                         borderRadius: BorderRadius.circular(12),
