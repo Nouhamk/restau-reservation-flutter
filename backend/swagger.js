@@ -18,11 +18,7 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:3000',
-        description: 'Serveur de développement'
-      },
-      {
-        url: 'https://api.restaurant-reservation.com',
+        url: 'https://restau-api.67gigs.codes',
         description: 'Serveur de production'
       }
     ],
