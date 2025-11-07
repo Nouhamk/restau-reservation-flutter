@@ -52,9 +52,3 @@ Les AL est une application complete de gestion de reservations pour restaurants,
   - Champagne (#D4A574)
   - Sage Green (#87A878)
 
-## Prochaines etapes
-
-1. [Installation](/guide/installation) : Configurer l'environnement de developpement
-2. [Configuration](/guide/configuration) : Parametrer l'application
-3. [Authentification](/guide/authentication) : Comprendre le systeme d'auth
-4. [Gestion des roles](/guide/roles) : Decouvrir les differents roles
