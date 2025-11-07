@@ -23,7 +23,7 @@ L'application simule la gestion d'une chaine de pubs anglais authentiques avec :
 
 Le projet suit une architecture **client-serveur** avec :
 - **Frontend** : Application mobile Flutter (iOS/Android)
-- **Backend** : API REST Node.js/Express
+- **Backend** : API REST Node.js/Express déployé sur un VPS sur l'adresse suivante : [https://restau-api.67gigs.codes/api/](https://restau-api.67gigs.codes/api/)
 - **Base de donnees** : MySQL
 
 ## 🚀 Instructions de Lancement
@@ -49,10 +49,10 @@ cd restau-reservation-flutter
 mysql -u root -p
 
 # Creer la base de donnees
-CREATE DATABASE restaurant_db;
+CREATE DATABASE default;
 
 # Importer le schema
-mysql -u root -p restaurant_db < database/init.sql
+mysql -u root -p default < database/init.sql
 ```
 
 ### 3. Lancer le Backend (API)
@@ -66,12 +66,11 @@ npm install
 
 # Configurer les variables d'environnement
 # Creer un fichier .env avec :
-# DB_HOST=localhost
-# DB_USER=root
-# DB_PASSWORD=votre_mot_de_passe
-# DB_NAME=restaurant_db
+# DB_URL=mysql://username:password@host:port/database_name
 # JWT_SECRET=votre_secret_jwt
 # PORT=3000
+# EMAIL_USER=your-email@gmail.com
+# EMAIL_APP_PASSWORD=your-gmail-app-password
 
 # Lancer le serveur
 npm start
@@ -204,7 +203,7 @@ restau-reservation-flutter/
 │   ├── assets/                 # Images et ressources
 │   └── pubspec.yaml            # Dependances Flutter
 │
-├── backend/                     # API Node.js/Express
+├── backend/                    # API Node.js/Express
 │   ├── server.js               # Point d'entree du serveur
 │   ├── db.js                   # Configuration base de donnees
 │   ├── controllers/            # Logique metier
@@ -218,16 +217,16 @@ restau-reservation-flutter/
 │   ├── services/               # Services (notifications)
 │   └── package.json            # Dependances Node.js
 │
-├── database/                    # Scripts base de donnees
+├── database/                   # Scripts base de donnees
 │   └── init.sql                # Schema et donnees initiales
 │
-├── docs/                        # Documentation VitePress
+├── docs/                       # Documentation VitePress
 │   ├── .vitepress/             # Configuration VitePress
 │   ├── guide/                  # Guides utilisateur
 │   ├── api/                    # Documentation API
 │   └── index.md                # Page d'accueil
 │
-└── README.md                    # Ce fichier
+└── README.md                   # Ce fichier
 ```
 
 ## 🛠️ Technologies Utilisees
@@ -290,8 +289,8 @@ Le projet suit une methodologie Agile avec :
 
 - **Nouhaila MOUKADDIME** - Gestion de projet, UI/UX, Authentification
 - **Axel Colliaux** - Gestion des menus, Wireframes
-- **Noureddine BENSADOK** - Backend, API, Base de donnees
-- **Ilias Abdelkader EZZAROUALI** - Systeme de reservations
+- **Noureddine BEN SADOK** - Backend, API, Base de donnees
+- **Ilias Abdelkader EZEROUALI** - Systeme de reservations
 
 
 ## 📝 License
