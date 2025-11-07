@@ -50,6 +50,7 @@ const menuRoutes = require('./routes/menu.route');
 const reservationRoutes = require('./routes/reservations.route');
 const placeRoutes = require('./routes/places.route');
 const timeSlotRoutes = require('./routes/timeSlots.route');
+const adminRoutes = require('./routes/admin.route');
 const authMiddleware = require('./middlewares/auth');
 
 app.use('/api', authRoutes);
@@ -57,6 +58,7 @@ app.use('/api/menu', menuRoutes);
 app.use('/api/reservations', reservationRoutes);
 app.use('/api/places', placeRoutes);
 app.use('/api/time-slots', timeSlotRoutes);
+app.use('/api/admin', adminRoutes);
 
 // ROUTES RÉSERVATIONS
 

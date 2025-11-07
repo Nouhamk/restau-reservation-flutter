@@ -5,6 +5,7 @@ import '../theme/app_theme.dart';
 import '../widgets/practical_info_section.dart';
 import 'welcome_screen.dart';
 import 'admin_places_screen.dart';
+import '../services/admin_service.dart';
 
 /// Écran d'accueil pour les ADMINISTRATEURS
 /// L'admin peut gérer les restaurants, menus et tout le système
@@ -17,13 +18,22 @@ class AdminHomeScreen extends StatefulWidget {
 
 class _AdminHomeScreenState extends State<AdminHomeScreen> {
   final _authService = AuthService();
+  final _adminService = AdminService();
   User? _currentUser;
   bool _isLoading = true;
+  bool _statsLoading = true;
+  Map<String, int> _stats = {
+    'restaurants': 0,
+    'clients': 0,
+    'hosts': 0,
+    'reservations': 0,
+  };
 
   @override
   void initState() {
     super.initState();
     _loadUserData();
+    _loadStats();
   }
 
   Future<void> _loadUserData() async {
@@ -32,6 +42,29 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       _currentUser = user;
       _isLoading = false;
     });
+  }
+
+  Future<void> _loadStats() async {
+    setState(() => _statsLoading = true);
+    try {
+      final result = await _adminService.getStats();
+      setState(() {
+        _stats = {
+          'restaurants': (result['restaurants'] as num).toInt(),
+          'clients': (result['clients'] as num).toInt(),
+          'hosts': (result['hosts'] as num).toInt(),
+          'reservations': (result['reservations'] as num).toInt(),
+        };
+      });
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erreur chargement statistiques')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _statsLoading = false);
+    }
   }
 
   Future<void> _handleLogout() async {
@@ -294,15 +327,38 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
               color: AppTheme.darkText,
             ),
           ),
+          const SizedBox(height: 12),
+          // refresh / loading row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              if (_statsLoading)
+                const SizedBox(
+                  height: 18,
+                  width: 18,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              else
+                IconButton(
+                  icon: const Icon(Icons.refresh, size: 18),
+                  color: AppTheme.mediumGrey,
+                  onPressed: _loadStats,
+                  tooltip: 'Actualiser',
+                ),
+            ],
+          ),
+          const SizedBox(height: 4),
           const SizedBox(height: 16),
           Row(
             children: [
               Expanded(
-                child: _buildStatItem('—', 'Restaurants', AppTheme.deepNavy),
+                child: _buildStatItem('${_stats['restaurants']}', 'Restaurants',
+                    AppTheme.deepNavy),
               ),
               Container(width: 1, height: 40, color: AppTheme.lightGrey),
               Expanded(
-                child: _buildStatItem('—', 'Clients', AppTheme.roseGold),
+                child: _buildStatItem(
+                    '${_stats['clients']}', 'Clients', AppTheme.roseGold),
               ),
             ],
           ),
@@ -312,11 +368,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           Row(
             children: [
               Expanded(
-                child: _buildStatItem('—', 'Hôtes', AppTheme.champagne),
+                child: _buildStatItem(
+                    '${_stats['hosts']}', 'Hôtes', AppTheme.champagne),
               ),
               Container(width: 1, height: 40, color: AppTheme.lightGrey),
               Expanded(
-                child: _buildStatItem('—', 'Réservations', AppTheme.sageGreen),
+                child: _buildStatItem('${_stats['reservations']}',
+                    'Réservations', AppTheme.sageGreen),
               ),
             ],
           ),
