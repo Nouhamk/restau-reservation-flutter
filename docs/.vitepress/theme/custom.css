@@ -1,4 +1,4 @@
-/* Personnalisation du thème avec les couleurs de l'application Les AL */
+/* Personnalisation du thÃ¨me avec les couleurs de l'application Les AL */
 
 :root {
   /* Couleurs principales */
@@ -51,7 +51,7 @@
   --vp-shadow-5: 0 18px 56px rgba(44, 62, 80, 0.16);
 }
 
-/* Typography raffinée */
+/* Typography raffinÃ©e */
 .vp-doc h1, .vp-doc h2, .vp-doc h3 {
   font-weight: 600;
   letter-spacing: 0.5px;
@@ -64,7 +64,7 @@
   color: var(--vp-c-brand);
 }
 
-/* Liens personnalisés */
+/* Liens personnalisÃ©s */
 .vp-doc a {
   color: #B76E79; /* roseGold */
   text-decoration: none;
@@ -125,7 +125,7 @@
   font-size: 0.9em;
 }
 
-/* Tables élégantes */
+/* Tables Ã©lÃ©gantes */
 .vp-doc table {
   border-color: var(--vp-c-divider);
 }
@@ -136,7 +136,7 @@
   font-weight: 600;
 }
 
-/* Footer personnalisé */
+/* Footer personnalisÃ© */
 .VPFooter {
   border-top: 1px solid var(--vp-c-divider);
 }
@@ -146,9 +146,38 @@
   transition: all 0.25s ease;
 }
 
+/* Image du hero plus grande */
+.VPHero .image-container {
+  max-width: 650px !important;
+}
+
+.VPHero .image-bg {
+  max-width: 650px !important;
+}
+
+.VPImage.image-src {
+  max-width: 650px !important;
+  width: 100% !important;
+}
+
+/* Ajuster l'espacement du hero */
+.VPHero .container {
+  max-width: 1400px !important;
+}
+
 /* Mobile responsive */
 @media (max-width: 768px) {
   .VPNavBarTitle .title {
     letter-spacing: 2px;
+  }
+  
+  .VPHero .image-container {
+    max-width: 100% !important;
+  }
+}
+
+@media (min-width: 960px) {
+  .VPHero .image-container {
+    max-width: 650px !important;
   }
 }
