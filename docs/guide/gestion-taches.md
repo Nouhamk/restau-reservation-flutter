@@ -1,92 +1,143 @@
-﻿# Gestion des taches
+# Gestion des taches
 
-Cette page présente la répartition des taches entre les membres de l'équipe pour le projet Les AL.
+Cette page présente la repartition des taches entre les membres de l'équipe pour le projet Les AL.
+
+## Methodologie Agile
+
+Pour ce projet académique, nous avons adopté une méthodologie **Agile** afin d'imiter un environnement d'entreprise réel et rester organisés tout au long du developpement.
+
+### Organisation avec GitHub Projects
+
+Nous utilisons un **board Kanban** sur GitHub Projects pour suivre l'avancement du projet :
+
+ **[Board Kanban du projet](https://github.com/users/Nouhamk/projects/9/views/1)**
+
+Le board est organise en colonnes :
+- **Backlog** : Fonctionnalités a developper
+- **To Do** : Taches pretes a etre demarrées
+- **In Progress** : Taches en cours de developpement
+- **Review** : En attente de validation
+- **Done** : Taches completées
+
+### User Stories et Issues
+
+Chaque fonctionnalité du projet est documentée sous forme de **User Story** dans les GitHub Issues :
+
+**Format des User Stories :**
+```
+En tant que [role],
+Je veux [action],
+Afin de [benefice].
+```
+
+**Exemples :**
+- En tant que client, je veux consulter le menu du restaurant afin de choisir mes plats
+- En tant que hote, je veux valider les reservations afin de gerer la capacite du restaurant
+- En tant qu''admin, je veux ajouter de nouveaux plats au menu afin de le mettre a jour
+
+Cette approche nous permet de :
+-  Garder une vision claire des besoins utilisateurs
+-  Prioriser les fonctionnalites importantes
+-  Suivre l''avancement de chaque membre
+-  Faciliter la collaboration et les reviews de code
+
+
 ## Equipe de developpement
 
 ### Nouhaila MOUKADDIME
 **Responsable**: Gestion de projet, Interface utilisateur et authentification
 
-- Gestion de projet et création des users stories et documentation.
-- Creation des écrans de connexion et inscription
-- Developpement du welcome screen et home screens
-- Implementation du theme centralisé pour l'application
-- Mise en place de la navigation basée sur les roles
-- Integration du design system
+**Realisations :**
+- Gestion de projet et création des users stories et documentation
+- Création des ecrans de connexion et inscription
+- Developpement du welcome screen et home screens pour chaque role
+- Implementation du theme centralise pour l'application
+- Mise en place de la navigation basee sur les roles (Client/Host/Admin)
+- Integration du design system avec palette de couleurs élégante
 
----
 
 ### Axel Colliaux
 **Responsable**: Gestion des menus et wireframes
 
-- Developpement de la partie menu
-- Implementation de l'ajout et édition de plats pour les admins
-- Creation des wireframes du projet
-- Creation des maquettes interface
+**Realisations :**
+- Developpement de la partie menu et consultation
+- Implementation de l'ajout et edition de plats pour les admins
+- Creation des wireframes complets du projet
+- Conception des maquettes d'interface
 
-**Taches en cours:**
-- Ajout/edition de plats avec verification role admin
-
----
 
 ### Noureddine BENSADOK
 **Responsable**: Backend et infrastructure
 
-- Developpement de l'API REST Node.js/Express
+**Réalisations :**
+- Développement de l'API REST Node.js/Express
 - Mise en place de la base de donnees MySQL
 - Configuration de l'authentification JWT
+- Implementation des middlewares de securité
+- Creation des controllers pour toutes les ressources
 
-**Composants developpes:**
-- API RESTful complete
-- Schema de base de donnees
-- Middleware d'authentification
-
----
 
 ### Ilias Abdelkader EZZAROUALI
-**Responsable**: Systeme de reservations
+**Responsable**: Systeme de réservations
 
-- Developpement de la gestion des reservations
+**Réalisations :**
+- Développement de la gestion complete des réservations
 - Creation des interfaces de reservation pour clients
 - Implementation des outils de gestion pour les hotes
+- Systeme de validation et historique
 
-**Fonctionnalites:**
-- Creation et modification de reservations
-- Interface hote et admin pour validation des reservations
-- Historique des reservations
-
-## Technologies utilisées
+## Technologies utilisees
 
 ### Frontend
-- Flutter 3.x
-- Dart
-- Provider (state management)
-- HTTP client
+- **Flutter 3.x** : Framework cross-platform
+- **Dart** : Langage de programmation
+- **Provider** : State management
+- **HTTP client** : Communication avec l''API
 
 ### Backend
-- Node.js
-- Express
-- MySQL
-- JWT pour l'authentification
+- **Node.js** : Environnement d''execution JavaScript
+- **Express** : Framework web minimaliste
+- **MySQL** : Base de donnees relationnelle
+- **JWT** : JSON Web Tokens pour l''authentification
+- **Swagger** : Documentation API interactive
 
 ### Outils de developpement
-- Git/GitHub pour versioning
-- VS Code
-- Postman pour les tests API
-- MySQL Workbench
+- **GitHub** : Plateforme de collaboration
+- **GitHub Projects** : Board Kanban et suivi Agile
+- **GitHub Issues** : User Stories et gestion des taches
+- **VS Code** : Editeur de code
+- **Postman** : Tests API
+- **MySQL Workbench** : Gestion base de donnees
+- **VitePress** : Documentation technique
 
 
-## Contribution
+## Bonnes pratiques adoptees
 
-Chaque membre de l'équipe suit le workflow Git suivant :
+### Code Quality
+-  Respect des conventions de nommage
+-  Code commente et documente
+-  Separation des responsabilites (MVC)
+-  Gestion des erreurs appropriee
 
-1. Créer une branche pour chaque fonctionnalite
-2. Commiter regulierement avec des messages clairs
-3. Creer une Pull Request pour review
-4. Merger apres validation de l'equipe
+### Collaboration
+-  Communication reguliere via GitHub
+-  Reviews de code systematiques
+-  Documentation a jour
+-  Partage des connaissances
+
+### Agilite
+-  Sprints de 2 semaines
+-  Stand-ups virtuels
+-  Retrospectives d''equipe
+-  Adaptation continue du backlog
 
 
 ## Contact et support
 
 Pour toute question ou probleme technique, contacter le membre responsable de la partie concernee.
 
-**Repository GitHub:** [restau-reservation-flutter](https://github.com/Nouhamk/restau-reservation-flutter)
+**Repository:** [restau-reservation-flutter](https://github.com/Nouhamk/restau-reservation-flutter)
+
+**Board Kanban:** [GitHub Projects](https://github.com/users/Nouhamk/projects/9/views/1)
+
+**Issues:** [GitHub Issues](https://github.com/Nouhamk/restau-reservation-flutter/issues)
