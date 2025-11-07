@@ -3,6 +3,8 @@ import '../services/auth_service.dart';
 import '../models/user_model.dart';
 import '../theme/app_theme.dart';
 import 'login_screen.dart';
+import 'reservation_screen.dart';
+import 'my_reservation_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -313,9 +315,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: Icons.calendar_today,
                 title: 'Réserver une Table',
                 subtitle: 'Choisissez votre créneau idéal',
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Fonctionnalité à venir')),
+                onTap: () async {
+                  // Récupérer le token d'authentification
+                  final token = await _authService.getToken();
+                  
+                  if (!mounted) return;
+                  
+                  // Naviguer vers la page de réservation avec le token
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ReservationPage(
+                        authToken: token ?? '',
+                        baseUrl: 'http://localhost:3000', // Changez en http://10.0.2.2:3000 pour émulateur Android
+                      ),
+                    ),
                   );
                 },
               ),
@@ -327,8 +341,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: 'Mes Réservations',
                 subtitle: 'Gérez vos réservations en cours',
                 onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Fonctionnalité à venir')),
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const MyReservationsPage(),
+                    ),
                   );
                 },
               ),

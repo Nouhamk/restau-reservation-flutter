@@ -61,6 +61,9 @@ app.use('/api/time-slots', timeSlotRoutes);
 // ROUTES RÉSERVATIONS
 
 // Créer une réservation
+// Ajouter cette route AVANT la route POST /api/reservations existante dans server.js
+
+// ROUTE AMÉLIORÉE : Créer une réservation avec limitations
 app.post('/api/reservations', authMiddleware, async (req, res) => {
   const { reservation_date, reservation_time, guests, notes, place_id } = req.body;
 
@@ -71,9 +74,92 @@ app.post('/api/reservations', authMiddleware, async (req, res) => {
   try {
     const connection = await mysql.createConnection(dbConfig);
     
-    // Vérifier la disponibilité (filtrer par place_id si fourni)
-    let existingQuery = 'SELECT SUM(guests) as total_guests FROM reservations WHERE reservation_date = ? AND reservation_time = ? AND status != "cancelled"';
+    // ========================================
+    // LIMITATION 1 : Maximum 3 réservations actives par utilisateur
+    // ========================================
+    const [activeReservations] = await connection.execute(
+      `SELECT COUNT(*) as count FROM reservations 
+       WHERE user_id = ? 
+       AND status IN ('pending', 'confirmed') 
+       AND reservation_date >= CURDATE()`,
+      [req.userId]
+    );
+
+    if (activeReservations[0].count >= 3) {
+      await connection.end();
+      return res.status(400).json({ 
+        error: 'Vous avez atteint la limite de 3 réservations actives. '
+             + 'Veuillez annuler une réservation existante pour en créer une nouvelle.'
+      });
+    }
+
+    // ========================================
+    // LIMITATION 2 : Maximum 1 réservation par jour
+    // ========================================
+    const [dailyReservations] = await connection.execute(
+      `SELECT COUNT(*) as count FROM reservations 
+       WHERE user_id = ? 
+       AND reservation_date = ? 
+       AND status != 'cancelled'`,
+      [req.userId, reservation_date]
+    );
+
+    if (dailyReservations[0].count >= 1) {
+      await connection.end();
+      return res.status(400).json({ 
+        error: 'Vous avez déjà une réservation pour cette date. '
+             + 'Une seule réservation par jour est autorisée.'
+      });
+    }
+
+    // ========================================
+    // LIMITATION 3 : Pas de doublon pour même créneau
+    // ========================================
+    const [duplicateCheck] = await connection.execute(
+      `SELECT id FROM reservations 
+       WHERE user_id = ? 
+       AND reservation_date = ? 
+       AND reservation_time = ? 
+       AND status != 'cancelled'`,
+      [req.userId, reservation_date, reservation_time]
+    );
+
+    if (duplicateCheck.length > 0) {
+      await connection.end();
+      return res.status(400).json({ 
+        error: 'Vous avez déjà une réservation pour ce créneau.'
+      });
+    }
+
+    // ========================================
+    // LIMITATION 4 : Nombre de personnes maximum
+    // ========================================
+    if (guests > 8) {
+      await connection.end();
+      return res.status(400).json({ 
+        error: 'Pour les groupes de plus de 8 personnes, veuillez nous contacter directement.'
+      });
+    }
+
+    if (guests < 1) {
+      await connection.end();
+      return res.status(400).json({ 
+        error: 'Le nombre de personnes doit être au moins 1.'
+      });
+    }
+
+    // ========================================
+    // Vérifier la disponibilité du créneau
+    // ========================================
+    let existingQuery = `
+      SELECT SUM(guests) as total_guests 
+      FROM reservations 
+      WHERE reservation_date = ? 
+      AND reservation_time = ? 
+      AND status != "cancelled"
+    `;
     const existingParams = [reservation_date, reservation_time];
+    
     if (place_id) {
       existingQuery += ' AND place_id = ?';
       existingParams.push(place_id);
@@ -92,17 +178,24 @@ app.post('/api/reservations', authMiddleware, async (req, res) => {
     }
 
     const currentCapacity = existing[0].total_guests || 0;
+    const available = slot[0].max_capacity - currentCapacity;
+
     if (currentCapacity + guests > slot[0].max_capacity) {
       await connection.end();
       return res.status(400).json({ 
-        error: 'Plus de places disponibles pour ce créneau',
-        available: slot[0].max_capacity - currentCapacity
+        error: 'Plus assez de places disponibles pour ce créneau',
+        available: available,
+        requested: guests
       });
     }
 
-    // Créer la réservation (inclure place_id si fourni)
+    // ========================================
+    // Créer la réservation
+    // ========================================
     const [result] = await connection.execute(
-      'INSERT INTO reservations (user_id, reservation_date, reservation_time, guests, notes, place_id) VALUES (?, ?, ?, ?, ?, ?)',
+      `INSERT INTO reservations 
+       (user_id, reservation_date, reservation_time, guests, notes, place_id, status) 
+       VALUES (?, ?, ?, ?, ?, ?, 'pending')`,
       [req.userId, reservation_date, reservation_time, guests, notes || null, place_id || null]
     );
 
@@ -110,45 +203,55 @@ app.post('/api/reservations', authMiddleware, async (req, res) => {
 
     res.status(201).json({
       message: 'Réservation créée avec succès',
-      reservationId: result.insertId
+      reservationId: result.insertId,
+      reservation: {
+        id: result.insertId,
+        reservation_date,
+        reservation_time,
+        guests,
+        status: 'pending'
+      }
     });
   } catch (error) {
-    console.error(error);
+    console.error('Erreur lors de la création de la réservation:', error);
     res.status(500).json({ error: 'Erreur serveur' });
   }
 });
 
-// Récupérer les réservations de l'utilisateur
-app.get('/api/reservations', authMiddleware, async (req, res) => {
+// ========================================
+// ROUTE BONUS : Obtenir le statut des limitations de l'utilisateur
+// ========================================
+app.get('/api/reservations/limits', authMiddleware, async (req, res) => {
   try {
     const connection = await mysql.createConnection(dbConfig);
-    const { place_id } = req.query;
+    
+    // Compter les réservations actives
+    const [activeReservations] = await connection.execute(
+      `SELECT COUNT(*) as count FROM reservations 
+       WHERE user_id = ? 
+       AND status IN ('pending', 'confirmed') 
+       AND reservation_date >= CURDATE()`,
+      [req.userId]
+    );
 
-    let query = 'SELECT * FROM reservations WHERE user_id = ?';
-    let params = [req.userId];
+    // Récupérer les dates déjà réservées
+    const [reservedDates] = await connection.execute(
+      `SELECT reservation_date FROM reservations 
+       WHERE user_id = ? 
+       AND status != 'cancelled' 
+       AND reservation_date >= CURDATE()`,
+      [req.userId]
+    );
 
-    // If place_id provided, filter by it (for client's own reservations)
-    if (place_id) {
-      query += ' AND place_id = ?';
-      params.push(place_id);
-    }
-
-    // Si c'est un hôte ou admin, afficher toutes les réservations (optionnellement filtrer par place)
-    if (req.userRole === 'host' || req.userRole === 'admin') {
-      query = 'SELECT r.*, u.name as user_name, u.email as user_email, u.phone as user_phone FROM reservations r JOIN users u ON r.user_id = u.id';
-      params = [];
-      if (place_id) {
-        query += ' WHERE r.place_id = ?';
-        params.push(place_id);
-      }
-    }
-
-    query += ' ORDER BY reservation_date DESC, reservation_time DESC';
-
-    const [reservations] = await connection.execute(query, params);
     await connection.end();
 
-    res.json(reservations);
+    res.json({
+      activeReservations: activeReservations[0].count,
+      maxReservations: 3,
+      remainingSlots: 3 - activeReservations[0].count,
+      reservedDates: reservedDates.map(r => r.reservation_date),
+      canReserve: activeReservations[0].count < 3
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Erreur serveur' });
