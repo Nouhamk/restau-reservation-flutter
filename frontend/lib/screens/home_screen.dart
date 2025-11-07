@@ -3,6 +3,7 @@ import '../services/auth_service.dart';
 import '../models/user_model.dart';
 import '../theme/app_theme.dart';
 import 'login_screen.dart';
+import 'admin_places_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -241,6 +242,62 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ],
+
+                    // Badge du rôle
+                    if (_currentUser?.role != null) ...[
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          gradient: _currentUser!.role == 'admin'
+                              ? AppTheme.goldGradient
+                              : LinearGradient(
+                                  colors: [
+                                    AppTheme.secondaryBrown,
+                                    AppTheme.leatherBrown,
+                                  ],
+                                ),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: (_currentUser!.role == 'admin'
+                                      ? AppTheme.accentGold
+                                      : AppTheme.secondaryBrown)
+                                  .withOpacity(0.3),
+                              blurRadius: 8,
+                              spreadRadius: 1,
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              _currentUser!.role == 'admin'
+                                  ? Icons.shield
+                                  : _currentUser!.role == 'host'
+                                      ? Icons.badge
+                                      : Icons.person,
+                              size: 14,
+                              color: AppTheme.primaryDark,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              _currentUser!.role!.toUpperCase(),
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.primaryDark,
+                                letterSpacing: 1,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -276,7 +333,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               // Section titre
               Text(
-                'NOS SERVICES',
+                _currentUser?.role == 'admin' ? 'PANNEAU D\'ADMINISTRATION' : 'NOS SERVICES',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -294,7 +351,85 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 24),
 
-              // Boutons de navigation
+              // Boutons Admin (si role = admin)
+              if (_currentUser?.role == 'admin') ...[
+                _buildNavigationButton(
+                  context,
+                  icon: Icons.location_city,
+                  title: 'Gestion des Restaurants',
+                  subtitle: 'Ajouter, modifier ou supprimer des restaurants',
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const AdminPlacesScreen(),
+                      ),
+                    );
+                  },
+                  isAdmin: true,
+                ),
+                const SizedBox(height: 16),
+
+                _buildNavigationButton(
+                  context,
+                  icon: Icons.people,
+                  title: 'Gestion des Utilisateurs',
+                  subtitle: 'Gérer les clients et les hôtes',
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Fonctionnalité à venir')),
+                    );
+                  },
+                  isAdmin: true,
+                ),
+                const SizedBox(height: 16),
+
+                _buildNavigationButton(
+                  context,
+                  icon: Icons.calendar_view_week,
+                  title: 'Toutes les Réservations',
+                  subtitle: 'Vue globale des réservations',
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Fonctionnalité à venir')),
+                    );
+                  },
+                  isAdmin: true,
+                ),
+                const SizedBox(height: 32),
+
+                // Divider avant les services normaux
+                Row(
+                  children: [
+                    Expanded(
+                      child: Divider(
+                        color: AppTheme.accentGold.withOpacity(0.3),
+                        thickness: 1,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        'SERVICES CLIENT',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.5,
+                          color: AppTheme.accentGold.withOpacity(0.7),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Divider(
+                        color: AppTheme.accentGold.withOpacity(0.3),
+                        thickness: 1,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+              ],
+
+              // Boutons de navigation (pour tous)
               _buildNavigationButton(
                 context,
                 icon: Icons.restaurant_menu,
@@ -358,6 +493,7 @@ class _HomeScreenState extends State<HomeScreen> {
         required String title,
         required String subtitle,
         required VoidCallback onTap,
+        bool isAdmin = false,
       }) {
     return Container(
       decoration: BoxDecoration(
@@ -365,19 +501,28 @@ class _HomeScreenState extends State<HomeScreen> {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            AppTheme.backgroundDark,
-            AppTheme.backgroundDark.withOpacity(0.8),
-          ],
+          colors: isAdmin
+              ? [
+                  AppTheme.accentGold.withOpacity(0.15),
+                  AppTheme.backgroundDark.withOpacity(0.9),
+                ]
+              : [
+                  AppTheme.backgroundDark,
+                  AppTheme.backgroundDark.withOpacity(0.8),
+                ],
         ),
         border: Border.all(
-          color: AppTheme.accentGold.withOpacity(0.3),
-          width: 1,
+          color: isAdmin
+              ? AppTheme.accentGold.withOpacity(0.5)
+              : AppTheme.accentGold.withOpacity(0.3),
+          width: isAdmin ? 2 : 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 6,
+            color: isAdmin
+                ? AppTheme.accentGold.withOpacity(0.2)
+                : Colors.black.withOpacity(0.3),
+            blurRadius: isAdmin ? 10 : 6,
             offset: const Offset(0, 3),
           ),
         ],
@@ -395,7 +540,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    gradient: AppTheme.goldGradient,
+                    gradient: isAdmin
+                        ? AppTheme.goldGradient
+                        : AppTheme.goldGradient,
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
@@ -418,14 +565,42 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.creamWhite,
-                          letterSpacing: 0.5,
-                        ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              title,
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                                color: isAdmin
+                                    ? AppTheme.accentGold
+                                    : AppTheme.creamWhite,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ),
+                          if (isAdmin)
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                gradient: AppTheme.goldGradient,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Text(
+                                'ADMIN',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.primaryDark,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                       const SizedBox(height: 6),
                       Text(
