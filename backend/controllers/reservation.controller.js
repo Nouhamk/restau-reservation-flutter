@@ -1,4 +1,5 @@
 const { getConnection } = require('../db');
+const notificationService = require('../services/notification.service');
 
 exports.createReservation = async (req, res) => {
   const { reservation_date, reservation_time, guests, notes, place_id } = req.body;
@@ -39,9 +40,34 @@ exports.createReservation = async (req, res) => {
       [req.userId, reservation_date, reservation_time, guests, notes || null, place_id || null]
     );
 
+    const reservationId = result.insertId;
+    
+    // Récupérer le nom du lieu si place_id est fourni
+    let placeName = null;
+    if (place_id) {
+      const [place] = await connection.execute('SELECT name FROM places WHERE id = ?', [place_id]);
+      if (place.length > 0) {
+        placeName = place[0].name;
+      }
+    }
+    
     await connection.end();
+    
+    // Envoyer une notification par email aux hôtes
+    try {
+      notificationService.notifyNewReservation(reservationId, {
+        userId: req.userId,
+        date: reservation_date,
+        timeSlot: reservation_time,
+        partySize: guests,
+        placeName
+      });
+    } catch (emailError) {
+      console.error('⚠️  Failed to send host notification:', emailError.message);
+      // Ne pas échouer la requête si l'email échoue
+    }
 
-    res.status(201).json({ message: 'Réservation créée avec succès', reservationId: result.insertId });
+    res.status(201).json({ message: 'Réservation créée avec succès', reservationId });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Erreur serveur' });
@@ -154,8 +180,13 @@ exports.patchStatus = async (req, res) => {
     await connection.execute('UPDATE reservations SET status = ? WHERE id = ?', [status, id]);
     await connection.end();
     
-    // TODO: Envoyer une notification au client (Firebase/email)
-    // notificationService.sendStatusUpdate(reservation[0].user_id, id, oldStatus, status);
+    // Envoyer une notification par email au client
+    try {
+      notificationService.sendStatusUpdate(reservation[0].user_id, id, oldStatus, status);
+    } catch (emailError) {
+      console.error('⚠️  Failed to send email notification:', emailError.message);
+      // Ne pas échouer la requête si l'email échoue
+    }
     
     res.json({ 
       message: 'Statut mis à jour avec succès', 
