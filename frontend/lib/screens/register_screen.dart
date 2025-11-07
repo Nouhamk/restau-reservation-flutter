@@ -61,7 +61,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(result['message']),
-          backgroundColor: AppTheme.deepGreen,
+          backgroundColor: AppTheme.sageGreen,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -73,7 +73,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(result['message']),
-          backgroundColor: AppTheme.warmRed,
+          backgroundColor: AppTheme.elegantBurgundy,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -85,7 +85,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: AppTheme.primaryGradient,
+          gradient: AppTheme.backgroundGradient,
         ),
         child: SafeArea(
           child: Center(
@@ -96,32 +96,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Logo / Icône avec effet doré
+                    // Logo minimaliste avec gradient
                     Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        gradient: AppTheme.goldGradient,
-                        boxShadow: AppTheme.leatherShadow,
+                        gradient: AppTheme.roseGoldGradient,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppTheme.roseGold.withOpacity(0.3),
+                            blurRadius: 15,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
                       ),
                       child: const Icon(
-                        Icons.person_add,
+                        Icons.local_bar,
                         size: 60,
-                        color: AppTheme.primaryDark,
+                        color: Colors.white,
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 32),
 
-                    // Titre
+                    // Titre élégant avec couleur - Nom du restaurant
                     ShaderMask(
-                      shaderCallback: (bounds) => AppTheme.goldGradient
-                          .createShader(Rect.fromLTWH(0, 0, bounds.width, bounds.height)),
+                      shaderCallback: (bounds) => AppTheme.roseGoldGradient.createShader(bounds),
                       child: const Text(
-                        'INSCRIPTION',
+                        'Les AL',
                         style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 2.5,
+                          fontSize: 36,
+                          fontWeight: FontWeight.w300,
+                          letterSpacing: 8,
                           color: Colors.white,
                         ),
                         textAlign: TextAlign.center,
@@ -129,19 +134,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     const SizedBox(height: 8),
 
-                    const Divider(
-                      color: AppTheme.accentGold,
+                    Text(
+                      'Pub Anglais Authentique',
+                      style: TextStyle(
+                        fontSize: 12,
+                        letterSpacing: 3,
+                        color: AppTheme.secondaryGray,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 4),
+
+                    Divider(
+                      color: AppTheme.borderColor,
                       thickness: 1,
-                      indent: 80,
-                      endIndent: 80,
+                      indent: 100,
+                      endIndent: 100,
                     ),
                     const SizedBox(height: 8),
+
+                    Text(
+                      'Inscription',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: AppTheme.secondaryGray,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 4),
 
                     Text(
                       'Rejoignez la communauté',
                       style: TextStyle(
                         fontSize: 14,
-                        color: AppTheme.creamWhite.withOpacity(0.8),
+                        color: AppTheme.mediumGrey,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -151,13 +179,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Container(
                       padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
-                        color: AppTheme.backgroundDark,
-                        borderRadius: BorderRadius.circular(12),
+                        gradient: AppTheme.subtleCardGradient,
+                        borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: AppTheme.accentGold.withOpacity(0.3),
+                          color: AppTheme.roseGold.withOpacity(0.2),
                           width: 1,
                         ),
-                        boxShadow: AppTheme.leatherShadow,
+                        boxShadow: AppTheme.softShadow,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -213,7 +241,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 _obscurePassword
                                     ? Icons.visibility_outlined
                                     : Icons.visibility_off_outlined,
-                                color: AppTheme.accentGold,
+                                color: AppTheme.roseGold,
                               ),
                               onPressed: () {
                                 setState(() => _obscurePassword = !_obscurePassword);
@@ -243,7 +271,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 _obscureConfirmPassword
                                     ? Icons.visibility_outlined
                                     : Icons.visibility_off_outlined,
-                                color: AppTheme.accentGold,
+                                color: AppTheme.roseGold,
                               ),
                               onPressed: () {
                                 setState(
@@ -262,45 +290,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           const SizedBox(height: 32),
 
-                          // Bouton d'inscription
-                          Container(
-                            height: 56,
-                            decoration: BoxDecoration(
-                              gradient: AppTheme.goldGradient,
-                              borderRadius: BorderRadius.circular(8),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppTheme.accentGold.withOpacity(0.3),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
+                          // Bouton d'inscription (style unifié)
+                          SizedBox(
+                            height: 50,
+                            width: double.infinity,
                             child: ElevatedButton(
                               onPressed: _isLoading ? null : _handleRegister,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Colors.transparent,
+                                backgroundColor: AppTheme.deepNavy,
+                                foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
+                                elevation: 0,
                               ),
                               child: _isLoading
-                                  ? const SizedBox(
-                                height: 24,
-                                width: 24,
+                                  ? SizedBox(
+                                height: 20,
+                                width: 20,
                                 child: CircularProgressIndicator(
-                                  strokeWidth: 3,
-                                  color: AppTheme.primaryDark,
+                                  strokeWidth: 2,
+                                  color: Colors.white,
                                 ),
                               )
-                                  : const Text(
-                                'CRÉER MON COMPTE',
+                                  : Text(
+                                'Créer mon compte',
                                 style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1.2,
-                                  color: AppTheme.primaryDark,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.5,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -310,14 +329,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     const SizedBox(height: 24),
 
-                    // Lien vers la connexion
+                    // Lien vers la connexion (style cohérent)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           'Déjà membre ? ',
                           style: TextStyle(
-                            color: AppTheme.creamWhite.withOpacity(0.7),
+                            color: AppTheme.secondaryGray,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w300,
                           ),
                         ),
                         TextButton(
@@ -328,11 +349,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             );
                           },
-                          child: const Text(
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: Text(
                             'Se connecter',
                             style: TextStyle(
-                              color: AppTheme.accentGold,
-                              fontWeight: FontWeight.bold,
+                              color: AppTheme.roseGold,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
                               decoration: TextDecoration.underline,
                             ),
                           ),

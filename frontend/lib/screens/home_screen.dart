@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../models/user_model.dart';
 import '../theme/app_theme.dart';
-import 'login_screen.dart';
+import '../widgets/practical_info_section.dart';
+import 'welcome_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -34,12 +35,12 @@ class _HomeScreenState extends State<HomeScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppTheme.backgroundDark,
+        backgroundColor: AppTheme.lightSurface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Déconnexion', style: TextStyle(color: AppTheme.accentGold)),
+        title: const Text('Déconnexion', style: TextStyle(color: AppTheme.darkText)),
         content: const Text(
           'Êtes-vous sûr de vouloir vous déconnecter ?',
-          style: TextStyle(color: AppTheme.creamWhite),
+          style: TextStyle(color: AppTheme.mediumGrey),
         ),
         actions: [
           TextButton(
@@ -48,7 +49,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(true),
-            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.warmRed),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFD32F2F),
+              foregroundColor: Colors.white,
+            ),
             child: const Text('Déconnexion'),
           ),
         ],
@@ -59,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
       await _authService.logout();
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        MaterialPageRoute(builder: (context) => const WelcomeScreen()),
       );
     }
   }
@@ -68,13 +72,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return Scaffold(
-        backgroundColor: AppTheme.primaryDark,
-        body: Center(child: CircularProgressIndicator(color: AppTheme.accentGold)),
+        backgroundColor: AppTheme.lightBackground,
+        body: Center(child: CircularProgressIndicator(color: AppTheme.softBlack)),
       );
     }
 
     return Scaffold(
-      backgroundColor: AppTheme.primaryDark,
+      backgroundColor: AppTheme.lightBackground,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -102,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: Icons.restaurant_menu_rounded,
                       title: 'Notre Carte',
                       description: 'Découvrez nos plats et boissons',
-                      color: AppTheme.accentGold,
+                      color: AppTheme.roseGold,
                       onTap: () => _showComingSoon(),
                     ),
                     const SizedBox(height: 16),
@@ -110,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: Icons.event_available_rounded,
                       title: 'Réserver une Table',
                       description: 'Choisissez votre créneau idéal',
-                      color: AppTheme.secondaryBrown,
+                      color: AppTheme.champagne,
                       onTap: () => _showComingSoon(),
                     ),
                     const SizedBox(height: 16),
@@ -118,14 +122,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: Icons.list_alt_rounded,
                       title: 'Mes Réservations',
                       description: 'Gérez vos réservations en cours',
-                      color: AppTheme.deepGreen,
+                      color: AppTheme.sageGreen,
                       onTap: () => _showComingSoon(),
                     ),
 
                     const SizedBox(height: 32),
 
                     // Informations pratiques
-                    _buildInfoSection(),
+                    PracticalInfoSection(),
                   ],
                 ),
               ),
@@ -140,33 +144,27 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppTheme.backgroundDark,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 10,
-            offset: Offset(0, 2),
-          ),
-        ],
+        color: AppTheme.lightSurface,
+        boxShadow: AppTheme.softShadow,
       ),
       child: Row(
         children: [
-          // Avatar
+          // Avatar avec gradient
           Container(
             padding: EdgeInsets.all(3),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              gradient: AppTheme.goldGradient,
+              gradient: AppTheme.roseGoldGradient,
             ),
             child: CircleAvatar(
               radius: 25,
-              backgroundColor: AppTheme.primaryDark,
+              backgroundColor: AppTheme.deepNavy,
               child: Text(
                 _currentUser?.nom?.substring(0, 1).toUpperCase() ?? 'U',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.accentGold,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -182,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   'Bonjour,',
                   style: TextStyle(
                     fontSize: 14,
-                    color: AppTheme.creamWhite.withOpacity(0.7),
+                    color: AppTheme.mediumGrey,
                   ),
                 ),
                 Text(
@@ -190,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: AppTheme.creamWhite,
+                    color: AppTheme.deepNavy,
                   ),
                 ),
               ],
@@ -199,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           // Bouton déconnexion
           IconButton(
-            icon: Icon(Icons.logout_rounded, color: AppTheme.accentGold),
+            icon: Icon(Icons.logout_rounded, color: AppTheme.roseGold),
             onPressed: _handleLogout,
             tooltip: 'Se déconnecter',
           ),
@@ -214,7 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
       style: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.bold,
-        color: AppTheme.creamWhite,
+        color: AppTheme.darkText,
         letterSpacing: 0.5,
       ),
     );
@@ -263,21 +261,35 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 16),
           decoration: BoxDecoration(
-            color: AppTheme.backgroundDark,
+            gradient: AppTheme.subtleCardGradient,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: AppTheme.accentGold.withOpacity(0.2),
+              color: AppTheme.lightGrey,
             ),
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.roseGold.withOpacity(0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
           child: Column(
             children: [
-              Icon(icon, color: AppTheme.accentGold, size: 28),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppTheme.roseGold.withOpacity(0.15),
+                ),
+                child: Icon(icon, color: AppTheme.roseGold, size: 24),
+              ),
               const SizedBox(height: 8),
               Text(
                 label,
                 style: TextStyle(
                   fontSize: 12,
-                  color: AppTheme.creamWhite,
+                  color: AppTheme.darkText,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -303,19 +315,13 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Container(
           padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: AppTheme.backgroundDark,
+            color: AppTheme.lightSurface,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: color.withOpacity(0.3),
+              color: AppTheme.lightGrey,
               width: 1.5,
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 8,
-                offset: Offset(0, 4),
-              ),
-            ],
+            boxShadow: AppTheme.cardShadow,
           ),
           child: Row(
             children: [
@@ -323,7 +329,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 padding: EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.15),
+                  color: color.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(icon, color: color, size: 32),
@@ -340,7 +346,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.creamWhite,
+                        color: AppTheme.darkText,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -348,7 +354,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       description,
                       style: TextStyle(
                         fontSize: 13,
-                        color: AppTheme.creamWhite.withOpacity(0.6),
+                        color: AppTheme.mediumGrey,
                       ),
                     ),
                   ],
@@ -368,80 +374,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildInfoSection() {
-    return Container(
-      padding: EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppTheme.backgroundDark,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppTheme.accentGold.withOpacity(0.2),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.info_outline_rounded, color: AppTheme.accentGold, size: 24),
-              const SizedBox(width: 12),
-              Text(
-                'Informations pratiques',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.creamWhite,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          _buildInfoItem(Icons.access_time_rounded, 'Ouvert 7j/7', '11h - 23h'),
-          const SizedBox(height: 12),
-          _buildInfoItem(Icons.location_on_rounded, 'Adresse', '123 Rue de l\'ESGI, Lyon'),
-          const SizedBox(height: 12),
-          _buildInfoItem(Icons.phone_rounded, 'Téléphone', '01 23 45 67 89'),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoItem(IconData icon, String label, String value) {
-    return Row(
-      children: [
-        Icon(icon, color: AppTheme.accentGold.withOpacity(0.6), size: 20),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppTheme.creamWhite.withOpacity(0.5),
-                ),
-              ),
-              Text(
-                value,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: AppTheme.creamWhite,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
   void _showComingSoon() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Fonctionnalité à venir'),
-        backgroundColor: AppTheme.deepGreen,
+        backgroundColor: AppTheme.softBlack,
         behavior: SnackBarBehavior.floating,
       ),
     );

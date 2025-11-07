@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Les AL - Restaurant',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme, // Thème style pub anglais
+      theme: AppTheme.lightTheme, // Thème lumineux et minimaliste
       home: const AuthenticationWrapper(),
     );
   }
@@ -58,7 +58,7 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
       return Scaffold(
         body: Container(
           decoration: BoxDecoration(
-            gradient: AppTheme.primaryGradient,
+            gradient: AppTheme.backgroundGradient,
           ),
           child: Center(
             child: Column(
@@ -68,26 +68,27 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    gradient: AppTheme.goldGradient,
-                    boxShadow: AppTheme.leatherShadow,
+                    color: Colors.white,
+                    boxShadow: AppTheme.cardShadow,
                   ),
-                  child: const Icon(
-                    Icons.restaurant_menu,
+                  child: Icon(
+                    Icons.local_bar,
                     size: 60,
-                    color: AppTheme.primaryDark,
+                    color: AppTheme.deepNavy,
                   ),
                 ),
                 const SizedBox(height: 32),
-                const CircularProgressIndicator(
-                  color: AppTheme.accentGold,
-                  strokeWidth: 3,
+                CircularProgressIndicator(
+                  color: AppTheme.deepNavy,
+                  strokeWidth: 2,
                 ),
                 const SizedBox(height: 16),
-                const Text(
+                Text(
                   'Chargement...',
                   style: TextStyle(
-                    color: AppTheme.creamWhite,
-                    fontSize: 16,
+                    color: AppTheme.secondaryGray,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w300,
                   ),
                 ),
               ],

@@ -33,42 +33,42 @@ class CustomTextField extends StatelessWidget {
       keyboardType: keyboardType,
       maxLines: maxLines,
       validator: validator,
-      style: const TextStyle(color: AppTheme.creamWhite),
+      style: TextStyle(color: AppTheme.darkText),
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
         prefixIcon: prefixIcon != null
-            ? Icon(prefixIcon, color: AppTheme.accentGold)
+            ? Icon(prefixIcon, color: AppTheme.roseGold)
             : null,
         suffixIcon: suffixIcon,
         labelStyle: TextStyle(
-          color: AppTheme.creamWhite.withOpacity(0.7),
+          color: AppTheme.mediumGrey,
           fontWeight: FontWeight.w500,
         ),
         hintStyle: TextStyle(
-          color: AppTheme.creamWhite.withOpacity(0.4),
+          color: AppTheme.mediumGrey.withOpacity(0.6),
         ),
         filled: true,
-        fillColor: AppTheme.backgroundDark,
+        fillColor: AppTheme.lightSurface,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: AppTheme.accentGold.withOpacity(0.3)),
+          borderSide: BorderSide(color: AppTheme.lightGrey),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: AppTheme.accentGold.withOpacity(0.3)),
+          borderSide: BorderSide(color: AppTheme.lightGrey),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: AppTheme.accentGold, width: 2),
+          borderSide: BorderSide(color: AppTheme.roseGold, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: AppTheme.warmRed, width: 1),
+          borderSide: BorderSide(color: AppTheme.elegantBurgundy, width: 1),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: AppTheme.warmRed, width: 2),
+          borderSide: BorderSide(color: AppTheme.elegantBurgundy, width: 2),
         ),
       ),
     );

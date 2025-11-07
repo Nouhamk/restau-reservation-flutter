@@ -50,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(result['message']),
-          backgroundColor: AppTheme.deepGreen,
+          backgroundColor: AppTheme.sageGreen,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -62,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(result['message']),
-          backgroundColor: AppTheme.warmRed,
+          backgroundColor: AppTheme.elegantBurgundy,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -74,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: AppTheme.primaryGradient,
+          gradient: AppTheme.backgroundGradient,
         ),
         child: SafeArea(
           child: Center(
@@ -85,32 +85,37 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Logo / Icône avec effet doré
+                    // Logo minimaliste avec gradient
                     Container(
-                      padding: const EdgeInsets.all(24),
+                      padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        gradient: AppTheme.goldGradient,
-                        boxShadow: AppTheme.leatherShadow,
+                        gradient: AppTheme.roseGoldGradient,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppTheme.roseGold.withOpacity(0.3),
+                            blurRadius: 15,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
                       ),
-                      child: const Icon(
-                        Icons.restaurant_menu,
-                        size: 80,
-                        color: AppTheme.primaryDark,
+                      child: Icon(
+                        Icons.local_bar,
+                        size: 60,
+                        color: Colors.white,
                       ),
                     ),
                     const SizedBox(height: 32),
 
-                    // Titre avec effet doré
+                    // Titre élégant avec couleur
                     ShaderMask(
-                      shaderCallback: (bounds) => AppTheme.goldGradient
-                          .createShader(Rect.fromLTWH(0, 0, bounds.width, bounds.height)),
-                      child: const Text(
+                      shaderCallback: (bounds) => AppTheme.roseGoldGradient.createShader(bounds),
+                      child: Text(
                         'Les AL',
                         style: TextStyle(
                           fontSize: 36,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 3,
+                          fontWeight: FontWeight.w300,
+                          letterSpacing: 8,
                           color: Colors.white,
                         ),
                         textAlign: TextAlign.center,
@@ -119,19 +124,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 8),
 
                     Text(
-                      'PUB - BRASSERIE',
+                      'Pub Anglais Authentique',
                       style: TextStyle(
-                        fontSize: 14,
-                        letterSpacing: 2,
-                        color: AppTheme.accentGold.withOpacity(0.8),
-                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                        letterSpacing: 3,
+                        color: AppTheme.secondaryGray,
+                        fontWeight: FontWeight.w400,
                       ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 4),
 
-                    const Divider(
-                      color: AppTheme.accentGold,
+                    Divider(
+                      color: AppTheme.borderColor,
                       thickness: 1,
                       indent: 100,
                       endIndent: 100,
@@ -139,27 +144,27 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 8),
 
                     Text(
-                      'Bienvenue',
+                      'Connexion',
                       style: TextStyle(
                         fontSize: 16,
-                        color: AppTheme.creamWhite.withOpacity(0.9),
-                        fontWeight: FontWeight.w400,
+                        color: AppTheme.secondaryGray,
+                        fontWeight: FontWeight.w300,
                       ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 40),
 
-                    // Carte de connexion avec effet cuir
+                    // Carte de connexion
                     Container(
-                      padding: const EdgeInsets.all(24),
+                      padding: const EdgeInsets.all(28),
                       decoration: BoxDecoration(
-                        color: AppTheme.backgroundDark,
-                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: AppTheme.accentGold.withOpacity(0.3),
+                          color: AppTheme.borderColor,
                           width: 1,
                         ),
-                        boxShadow: AppTheme.leatherShadow,
+                        boxShadow: AppTheme.cardShadow,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -195,7 +200,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 _obscurePassword
                                     ? Icons.visibility_outlined
                                     : Icons.visibility_off_outlined,
-                                color: AppTheme.accentGold,
+                                color: AppTheme.secondaryGray,
                               ),
                               onPressed: () {
                                 setState(() => _obscurePassword = !_obscurePassword);
@@ -227,55 +232,46 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Text(
                                 'Mot de passe oublié ?',
                                 style: TextStyle(
-                                  color: AppTheme.accentGold.withOpacity(0.8),
+                                  color: AppTheme.secondaryGray,
                                   fontSize: 13,
+                                  fontWeight: FontWeight.w400,
                                 ),
                               ),
                             ),
                           ),
                           const SizedBox(height: 24),
 
-                          // Bouton de connexion avec effet doré
-                          Container(
-                            height: 56,
-                            decoration: BoxDecoration(
-                              gradient: AppTheme.goldGradient,
-                              borderRadius: BorderRadius.circular(8),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppTheme.accentGold.withOpacity(0.3),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
+                          // Bouton de connexion (style unifié)
+                          SizedBox(
+                            width: double.infinity,
+                            height: 50,
                             child: ElevatedButton(
                               onPressed: _isLoading ? null : _handleLogin,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Colors.transparent,
+                                backgroundColor: AppTheme.deepNavy,
+                                foregroundColor: Colors.white,
+                                elevation: 0,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
                               child: _isLoading
                                   ? const SizedBox(
-                                height: 24,
-                                width: 24,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 3,
-                                  color: AppTheme.primaryDark,
-                                ),
-                              )
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
                                   : const Text(
-                                'SE CONNECTER',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1.2,
-                                  color: AppTheme.primaryDark,
-                                ),
-                              ),
+                                      'Se connecter',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
                             ),
                           ),
                         ],
@@ -288,7 +284,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         Expanded(
                           child: Divider(
-                            color: AppTheme.accentGold.withOpacity(0.3),
+                            color: AppTheme.borderColor,
                             thickness: 1,
                           ),
                         ),
@@ -297,15 +293,16 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Text(
                             'OU',
                             style: TextStyle(
-                              color: AppTheme.accentGold.withOpacity(0.6),
-                              fontWeight: FontWeight.w600,
+                              color: AppTheme.secondaryGray,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12,
                               letterSpacing: 1,
                             ),
                           ),
                         ),
                         Expanded(
                           child: Divider(
-                            color: AppTheme.accentGold.withOpacity(0.3),
+                            color: AppTheme.borderColor,
                             thickness: 1,
                           ),
                         ),
@@ -313,14 +310,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 24),
 
-                    // Lien vers l'inscription
+                    // Lien vers l'inscription (style cohérent)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           'Pas encore de compte ? ',
                           style: TextStyle(
-                            color: AppTheme.creamWhite.withOpacity(0.7),
+                            color: AppTheme.secondaryGray,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w300,
                           ),
                         ),
                         TextButton(
@@ -331,11 +330,17 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             );
                           },
-                          child: const Text(
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: Text(
                             'S\'inscrire',
                             style: TextStyle(
-                              color: AppTheme.accentGold,
-                              fontWeight: FontWeight.bold,
+                              color: AppTheme.roseGold,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
                               decoration: TextDecoration.underline,
                             ),
                           ),
